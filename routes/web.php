@@ -1,33 +1,41 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MapsController;
-use App\Http\Controllers\RiskCheckController;
-use Illuminate\Support\Facades\Route;
+use App\\Http\\Controllers\\AuthController;
+use App\\Http\\Controllers\\MapsController;
+use App\\Http\\Controllers\\RiskCheckController;
+use Illuminate\\Support\\Facades\\Route;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// Maps
+// Maps dan pencarian shelter
 Route::get('/maps', [MapsController::class, 'index'])
     ->name('maps');
+
 Route::get('/api/shelters', [MapsController::class, 'search'])
     ->name('shelters.search');
 
-// Risk Check — sementara masih menampilkan view
+// Halaman yang memerlukan login
 Route::middleware('auth')->group(function () {
     Route::get('/risk-check', [RiskCheckController::class, 'index'])
         ->name('risk-check');
 
     Route::post('/risk-check', [RiskCheckController::class, 'store'])
         ->name('risk-check.store');
-});
 
-// Profil pengguna
-Route::get('/profil', function () {
-    return view('profile');
-})->middleware('auth')->name('profile');
+    Route::get('/report', function () {
+        return view('report');
+    })->name('report');
+
+    Route::get('/donate', function () {
+        return view('donate');
+    })->name('donate');
+
+    Route::get('/profil', function () {
+        return view('profil');
+    })->name('profil');
+});
 
 // Autentikasi untuk pengguna yang belum login
 Route::middleware('guest')->group(function () {
