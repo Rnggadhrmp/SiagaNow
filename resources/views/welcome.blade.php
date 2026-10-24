@@ -9,6 +9,7 @@
     <meta name="description" content="SiagaNow membantu masyarakat mendapatkan informasi kebencanaan, cuaca, shelter, dan kesiapsiagaan banjir serta tanah longsor.">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
     <style>
         :root {
@@ -357,74 +358,71 @@
         .map-preview {
             position: relative;
             overflow: hidden;
-            min-height: 205px;
+            height: 300px;
             border-radius: 13px;
             border: 1px solid #c9e2d6;
-            background:
-                radial-gradient(ellipse at 30% 40%, #c4e8d0 0%, transparent 45%),
-                linear-gradient(145deg, #d9eee4, #a8d7c0);
+            background: #e8f0e9;
+            isolation: isolate;
         }
 
-        .map-preview::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            opacity: .7;
-            background-image:
-                linear-gradient(35deg, transparent 46%, #f5fff7 47%, #f5fff7 48%, transparent 49%),
-                linear-gradient(125deg, transparent 46%, #f5fff7 47%, #f5fff7 48%, transparent 49%);
-            background-size: 110px 90px, 140px 100px;
+        #home-map {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
 
-        .map-water {
+        .map-preview-label {
             position: absolute;
-            width: 44%;
-            height: 130%;
-            top: -15%;
-            left: -14%;
-            transform: rotate(18deg);
-            background: #9bd3d8;
-            border-radius: 40% 60% 70% 30%;
-            opacity: .9;
-        }
-
-        .map-label {
-            position: absolute;
-            z-index: 2;
-            top: 45%;
-            left: 48%;
-            transform: translate(-50%, -50%);
+            z-index: 500;
+            top: 12px;
+            left: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             padding: 9px 12px;
+            border: 1px solid rgba(255,255,255,.9);
             border-radius: 10px;
-            border: 1px solid rgba(255,255,255,.8);
-            background: rgba(248,252,248,.92);
-            color: #356c59;
+            background: rgba(255,255,255,.95);
+            color: #075c49;
             font-size: 12px;
             font-weight: 800;
-            text-align: center;
-        }
-
-        .map-marker {
-            position: absolute;
-            z-index: 2;
-            width: 12px;
-            height: 12px;
-            border: 3px solid #fff;
-            border-radius: 50%;
-            background: #db5757;
-            box-shadow: 0 1px 6px #497c69;
+            box-shadow: 0 2px 10px rgba(20,70,50,.12);
+            pointer-events: none;
         }
 
         .map-caption {
             position: absolute;
-            z-index: 2;
+            z-index: 500;
             bottom: 10px;
             left: 10px;
+            max-width: calc(100% - 20px);
             padding: 7px 9px;
+            border: 1px solid rgba(255,255,255,.8);
             border-radius: 8px;
-            background: rgba(255,255,255,.9);
+            background: rgba(255,255,255,.94);
             font-size: 10px;
             color: #4d6e60;
+            pointer-events: none;
+        }
+
+        .home-map-pin {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #fff;
+            border-radius: 50% 50% 50% 0;
+            background: #dc4c50;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 800;
+            box-shadow: 0 2px 8px rgba(0,0,0,.25);
+            transform: rotate(-45deg);
+        }
+
+        .home-map-pin span {
+            transform: rotate(45deg);
         }
 
         .map-open {
@@ -733,49 +731,56 @@
         </a>
 
         <nav class="navigation" aria-label="Navigasi utama">
-            <a href="/" class="nav-link active">
+            <a href="{{ route('home') }}" class="nav-link active" aria-current="page">
                 <span>⌂</span> Home
             </a>
-            <a href="/maps" class="nav-link">
-                <span>▧</span> Maps
+
+            <a href="{{ route('maps') }}" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/>
+                    <circle cx="12" cy="10" r="2.5"/>
+                </svg>
+                Maps
             </a>
+
+            <a href="{{ url('/risk-check') }}" class="nav-link">
+                <span>⚠</span> Cek Risiko
+            </a>
+
             <a href="/report" class="nav-link">
                 <span>⚑</span> Report
             </a>
+
             <a href="/donate" class="nav-link">
                 <span>♡</span> Donate
             </a>
+
             <a href="/other" class="nav-link">
                 <span>☰</span> Other
-                
-        @auth
-            <a href="{{ route('profile') }}"
-            class="rounded-xl px-4 py-2 font-semibold hover:bg-emerald-100">
-                Profil
             </a>
 
-            <form action="{{ route('logout') }}" method="POST"
-                class="inline">
-                @csrf
-                <button type="submit"
-                    class="rounded-xl bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700">
-                    Keluar
-                </button>
-            </form>
-        @else
-            <a href="{{ route('login') }}"
-            class="rounded-xl px-4 py-2 font-semibold">
-                Masuk
-            </a>
+            @auth
+                <a href="{{ route('profil') }}" class="nav-link">
+                    Profil
+                </a>
 
-            <a href="{{ route('register') }}"
-            class="rounded-xl bg-emerald-800 px-4 py-2 font-semibold text-white">
-                Daftar
-            </a>
-        @endauth
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="nav-link">
+                        Keluar
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="nav-link">
+                    Masuk
+                </a>
 
-            </a>
+                <a href="{{ route('register') }}" class="nav-link">
+                    Daftar
+                </a>
+            @endauth
         </nav>
+
     </header>
 
     <main class="dashboard">
@@ -893,19 +898,17 @@
                         </div>
                     </div>
 
-                    <div class="map-preview" aria-label="Ilustrasi pratinjau peta">
-                        <div class="map-water"></div>
-
-                        <div class="map-label">
-                            📍 Sumatera Barat
+                    <div class="map-preview" aria-label="Pratinjau peta interaktif Sumatera Barat">
+                        <div id="home-map"></div>
+                        <div class="map-preview-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/>
+                                <circle cx="12" cy="10" r="2.5"/>
+                            </svg>
+                            Sumatera Barat
                         </div>
-
-                        <span class="map-marker" style="top:32%;left:37%;"></span>
-                        <span class="map-marker" style="top:61%;left:60%;"></span>
-                        <span class="map-marker" style="top:72%;left:46%;"></span>
-
                         <div class="map-caption">
-                            Ilustrasi tampilan peta · Data risiko belum ditampilkan
+                            Peta dasar OpenStreetMap · Data risiko dan shelter belum ditampilkan
                         </div>
                     </div>
 
@@ -1149,7 +1152,7 @@
             </div>
 
             <a href="/report" class="donation-button">
-                Buat Laporan Bencana →
+                Buat Laporan Bencana →  
             </a>
         </section>
 
@@ -1164,6 +1167,38 @@
     </footer>
 
 </div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const mapElement = document.getElementById('home-map');
+        if (!mapElement || typeof L === 'undefined') return;
+
+        const homeMap = L.map('home-map', {
+            scrollWheelZoom: false,
+            zoomControl: true
+        }).setView([-0.9471, 100.4172], 8);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>',
+            maxZoom: 19
+        }).addTo(homeMap);
+
+        // Penanda ini hanya menunjukkan pusat wilayah Sumatera Barat, bukan titik bahaya.
+        const centerPin = L.divIcon({
+            className: '',
+            html: '<div class="home-map-pin"><span>•</span></div>',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        });
+
+        L.marker([-0.9471, 100.4172], { icon: centerPin })
+            .addTo(homeMap)
+            .bindPopup('<strong>Sumatera Barat</strong><br>Pusat tampilan peta');
+
+        setTimeout(function () { homeMap.invalidateSize(); }, 150);
+    });
+</script>
 
 </body>
 </html>
