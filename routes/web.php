@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Http\Controllers\AuthController;
@@ -12,9 +11,14 @@ Route::get('/maps', function () {
     return view('maps');
 })->name('maps');
 
+Route::get('/risk-check', function () {
+    return view('risk-check');
+});
+
+// Profil pengguna
 Route::get('/profil', function () {
-    return view('profile');
-})->middleware('auth')->name('profile');
+    return view('profil');
+})->middleware('auth')->name('profil');
 
 // Autentikasi untuk pengunjung yang belum login
 Route::middleware('guest')->group(function () {
