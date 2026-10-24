@@ -10,19 +10,13 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-
     <title>SiagaNow | Siaga Bencana, Selamat Bersama</title>
 
     <meta name="description" content="SiagaNow membantu masyarakat mendapatkan informasi kebencanaan, cuaca, shelter, dan kesiapsiagaan banjir serta tanah longsor.">
 
-
-
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-
-
 
     <style>
 
@@ -46,15 +40,11 @@
 
         }
 
-
-
         * {
 
             box-sizing: border-box;
 
         }
-
-
 
         body {
 
@@ -68,15 +58,11 @@
 
         }
 
-
-
         a, button {
 
             -webkit-tap-highlight-color: transparent;
 
         }
-
-
 
         .landscape {
 
@@ -98,8 +84,6 @@
 
         }
 
-
-
         .page-shell {
 
             position: relative;
@@ -109,8 +93,6 @@
             padding: 22px 20px 40px;
 
         }
-
-
 
         .site-header {
 
@@ -142,8 +124,6 @@
 
         }
 
-
-
         .brand {
 
             display: flex;
@@ -157,8 +137,6 @@
             color: var(--green-dark);
 
         }
-
-
 
         .brand-symbol {
 
@@ -182,8 +160,6 @@
 
         }
 
-
-
         .brand-name {
 
             font-size: 25px;
@@ -193,8 +169,6 @@
             letter-spacing: -.8px;
 
         }
-
-
 
         .brand-caption {
 
@@ -212,8 +186,6 @@
 
         }
 
-
-
         .navigation {
 
             display: flex;
@@ -227,8 +199,6 @@
             flex-wrap: wrap;
 
         }
-
-
 
         .nav-link {
 
@@ -260,8 +230,6 @@
 
         }
 
-
-
         .nav-link:hover {
 
             transform: translateY(-1px);
@@ -269,8 +237,6 @@
             background: #e7f6ed;
 
         }
-
-
 
         .nav-link.active {
 
@@ -282,8 +248,6 @@
 
         }
 
-
-
         .dashboard {
 
             max-width: 1440px;
@@ -291,8 +255,6 @@
             margin: 0 auto;
 
         }
-
-
 
         .welcome-card {
 
@@ -318,8 +280,6 @@
 
         }
 
-
-
         .eyebrow {
 
             font-size: 12px;
@@ -333,8 +293,6 @@
             color: #218568;
 
         }
-
-
 
         .welcome-title {
 
@@ -350,8 +308,6 @@
 
         }
 
-
-
         .welcome-description {
 
             max-width: 700px;
@@ -363,8 +319,6 @@
             line-height: 1.8;
 
         }
-
-
 
         .date-chip {
 
@@ -386,8 +340,6 @@
 
         }
 
-
-
         .section-heading {
 
             margin: 0;
@@ -399,8 +351,6 @@
             color: var(--green-dark);
 
         }
-
-
 
         .section-subtitle {
 
@@ -414,8 +364,6 @@
 
         }
 
-
-
         .panel {
 
             border: 1px solid rgba(255,255,255,.85);
@@ -428,15 +376,11 @@
 
         }
 
-
-
         .panel-padding {
 
             padding: 20px;
 
         }
-
-
 
         .section-title-row {
 
@@ -451,8 +395,6 @@
             margin-bottom: 17px;
 
         }
-
-
 
         .status-pill {
 
@@ -476,8 +418,6 @@
 
         }
 
-
-
         .status-dot {
 
             width: 7px;
@@ -489,8 +429,6 @@
             background: #d99c28;
 
         }
-
-
 
         .warning-panel {
 
@@ -514,8 +452,6 @@
 
         }
 
-
-
         .warning-icon {
 
             width: 47px;
@@ -534,8 +470,6 @@
 
         }
 
-
-
         .warning-title {
 
             font-weight: 850;
@@ -545,8 +479,6 @@
             color: #79551a;
 
         }
-
-
 
         .warning-text {
 
@@ -559,8 +491,6 @@
             color: #866e47;
 
         }
-
-
 
         .warning-badge {
 
@@ -580,8 +510,6 @@
 
         }
 
-
-
         .main-grid {
 
             display: grid;
@@ -593,8 +521,6 @@
             align-items: start;
 
         }
-
-
 
         .content-column,
 
@@ -608,8 +534,6 @@
 
         }
 
-
-
         .metrics-grid {
 
             display: grid;
@@ -619,8 +543,6 @@
             gap: 13px;
 
         }
-
-
 
         .metric-card {
 
@@ -634,8 +556,6 @@
 
         }
 
-
-
         .metric-top {
 
             display: flex;
@@ -647,8 +567,6 @@
             gap: 8px;
 
         }
-
-
 
         .metric-icon {
 
@@ -668,8 +586,6 @@
 
         }
 
-
-
         .metric-label {
 
             margin-top: 14px;
@@ -681,8 +597,6 @@
             color: #55776b;
 
         }
-
-
 
         .metric-value {
 
@@ -696,8 +610,6 @@
 
         }
 
-
-
         .metric-note {
 
             margin-top: 7px;
@@ -709,8 +621,6 @@
             color: #83968e;
 
         }
-
-
 
         .map-preview {
 
@@ -730,8 +640,6 @@
 
         }
 
-
-
         #home-map {
 
             width: 100%;
@@ -741,8 +649,6 @@
             z-index: 1;
 
         }
-
-
 
         .map-preview-label {
 
@@ -780,8 +686,6 @@
 
         }
 
-
-
         .map-caption {
 
             position: absolute;
@@ -809,8 +713,6 @@
             pointer-events: none;
 
         }
-
-
 
         .home-map-pin {
 
@@ -842,15 +744,11 @@
 
         }
 
-
-
         .home-map-pin span {
 
             transform: rotate(45deg);
 
         }
-
-
 
         .map-open {
 
@@ -878,15 +776,11 @@
 
         }
 
-
-
         .map-open:hover {
 
             background: var(--green-deep);
 
         }
-
-
 
         .feature-list {
 
@@ -895,8 +789,6 @@
             gap: 10px;
 
         }
-
-
 
         .feature-row {
 
@@ -915,8 +807,6 @@
             background: #fff;
 
         }
-
-
 
         .feature-icon {
 
@@ -938,8 +828,6 @@
 
         }
 
-
-
         .feature-title {
 
             font-size: 12px;
@@ -949,8 +837,6 @@
             color: var(--green-dark);
 
         }
-
-
 
         .feature-description {
 
@@ -964,8 +850,6 @@
 
         }
 
-
-
         .feature-arrow {
 
             margin-left: auto;
@@ -976,8 +860,6 @@
 
         }
 
-
-
         .feature-link {
 
             color: inherit;
@@ -985,8 +867,6 @@
             text-decoration: none;
 
         }
-
-
 
         .feature-link:hover .feature-row {
 
@@ -996,8 +876,6 @@
 
         }
 
-
-
         .news-placeholder {
 
             display: grid;
@@ -1005,8 +883,6 @@
             gap: 12px;
 
         }
-
-
 
         .news-item {
 
@@ -1022,8 +898,6 @@
 
         }
 
-
-
         .news-item:last-child {
 
             padding-bottom: 0;
@@ -1031,8 +905,6 @@
             border-bottom: none;
 
         }
-
-
 
         .news-thumbnail {
 
@@ -1054,8 +926,6 @@
 
         }
 
-
-
         .news-title {
 
             font-size: 12px;
@@ -1065,8 +935,6 @@
             line-height: 1.6;
 
         }
-
-
 
         .news-description {
 
@@ -1079,8 +947,6 @@
             line-height: 1.7;
 
         }
-
-
 
         .donation-banner {
 
@@ -1106,8 +972,6 @@
 
         }
 
-
-
         .donation-title {
 
             font-size: 19px;
@@ -1115,8 +979,6 @@
             font-weight: 900;
 
         }
-
-
 
         .donation-description {
 
@@ -1131,8 +993,6 @@
             color: #d3eee1;
 
         }
-
-
 
         .donation-button {
 
@@ -1156,15 +1016,11 @@
 
         }
 
-
-
         .donation-button:hover {
 
             background: #dff3e7;
 
         }
-
-
 
         .footer {
 
@@ -1181,10 +1037,6 @@
             line-height: 1.8;
 
         }
-
-
-
-
 
         /* Mega menu Other */
 
@@ -1242,8 +1094,6 @@
 
         .sn-other-trigger:focus-visible, .sn-other-item:focus-visible { outline: 3px solid #f0b429; outline-offset: 3px; }
 
-
-
         @media (max-width: 1024px) {
 
             .main-grid {
@@ -1251,8 +1101,6 @@
                 grid-template-columns: 1fr;
 
             }
-
-
 
             .side-column {
 
@@ -1262,8 +1110,6 @@
 
             }
 
-
-
             .site-header {
 
                 align-items: flex-start;
@@ -1272,8 +1118,6 @@
 
         }
 
-
-
         @media (max-width: 640px) {
 
             .page-shell {
@@ -1281,8 +1125,6 @@
                 padding: 12px 11px 25px;
 
             }
-
-
 
             .site-header {
 
@@ -1294,15 +1136,11 @@
 
             }
 
-
-
             .brand-name {
 
                 font-size: 22px;
 
             }
-
-
 
             .navigation {
 
@@ -1314,8 +1152,6 @@
 
             }
 
-
-
             .nav-link {
 
                 padding: 9px 10px;
@@ -1325,8 +1161,6 @@
                 gap: 5px;
 
             }
-
-
 
             .welcome-card {
 
@@ -1340,15 +1174,11 @@
 
             }
 
-
-
             .welcome-title {
 
                 font-size: 27px;
 
             }
-
-
 
             .warning-panel {
 
@@ -1362,8 +1192,6 @@
 
             }
 
-
-
             .warning-badge {
 
                 grid-column: 2;
@@ -1371,8 +1199,6 @@
                 justify-self: start;
 
             }
-
-
 
             .main-grid,
 
@@ -1384,23 +1210,17 @@
 
             }
 
-
-
             .side-column {
 
                 grid-template-columns: 1fr;
 
             }
 
-
-
             .metrics-grid {
 
                 grid-template-columns: 1fr;
 
             }
-
-
 
             .metric-card {
 
@@ -1414,15 +1234,11 @@
 
             }
 
-
-
             .metric-top {
 
                 grid-row: span 3;
 
             }
-
-
 
             .metric-label,
 
@@ -1434,23 +1250,17 @@
 
             }
 
-
-
             .metric-value {
 
                 margin-top: 4px;
 
             }
 
-
-
             .metric-note {
 
                 margin-top: 4px;
 
             }
-
-
 
             .donation-banner {
 
@@ -1462,8 +1272,6 @@
 
             }
 
-
-
             .donation-button {
 
                 width: 100%;
@@ -1471,8 +1279,6 @@
                 text-align: center;
 
             }
-
-
 
             .panel-padding {
 
@@ -1486,21 +1292,13 @@
 
 </head>
 
-
-
 <body>
-
-
 
 <!-- Background ilustrasi lanskap dari public/images/siaganow-bg.png -->
 
 <div class="landscape" aria-hidden="true"></div>
 
-
-
 <div class="page-shell">
-
-
 
     <!-- NAVBAR -->
 
@@ -1520,8 +1318,6 @@
 
         </a>
 
-
-
         <nav class="navigation" aria-label="Navigasi utama">
 
             <a href="{{ route('home') }}" class="nav-link active" aria-current="page">
@@ -1530,11 +1326,9 @@
 
             </a>
 
-
-
             <a href="{{ route('maps') }}" class="nav-link">
 
-                <svg xmlns="http://www\.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 
                     <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/>
 
@@ -1546,15 +1340,11 @@
 
             </a>
 
-
-
             <a href="{{ url('/risk-check') }}" class="nav-link">
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 9v5"/><path d="M12 17h.01"/></svg> Cek Risiko
 
             </a>
-
-
 
             <a href="/report" class="nav-link">
 
@@ -1562,15 +1352,11 @@
 
             </a>
 
-
-
             <a href="/donate" class="nav-link">
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg> Donate
 
             </a>
-
-
 
             <div class="sn-other-wrap" data-sn-other>
 
@@ -1594,55 +1380,41 @@
 
                     <div class="sn-other-grid">
 
-                        <div class="sn-other-item is-planned">
+                        <a href="{{ route('informasi-banjir') }}" class="sn-other-item">
 
-                            <span class="sn-other-icon" aria-hidden="true">≋</span>
+                                <span class="sn-other-icon" aria-hidden="true">≋</span>
 
-                            <span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Halaman belum dibuat</span></span>
+                                <span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Lihat Informasi</span></span>
 
-                        </div>
+                            </a>
 
-                        <div class="sn-other-item is-planned">
-
+                        <a href="{{ route('informasi-longsor') }}" class="sn-other-item">
                             <span class="sn-other-icon" aria-hidden="true">⌁</span>
+                            <span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span>
+                        </a>
 
-                            <span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Halaman belum dibuat</span></span>
-
-                        </div>
-
-                        <div class="sn-other-item is-planned">
-
+                        <a href="{{ route('statistik-kejadian') }}" class="sn-other-item">
                             <span class="sn-other-icon" aria-hidden="true">▥</span>
+                            <span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Statistik</span></span>
+                        </a>
 
-                            <span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan statistik setelah sumber data tersedia.</span><span class="sn-other-tag">Menunggu data</span></span>
-
-                        </div>
-
-                        <div class="sn-other-item is-planned">
-
+                        <a href="{{ route('panduan-kesiapsiagaan') }}" class="sn-other-item">
                             <span class="sn-other-icon" aria-hidden="true">☷</span>
+                            <span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span>
+                        </a>
 
-                            <span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Halaman belum dibuat</span></span>
-
-                        </div>
-
-                        <div class="sn-other-item is-planned">
-
+                        <a href="{{ route('berita-kebencanaan') }}" class="sn-other-item">
                             <span class="sn-other-icon" aria-hidden="true">▤</span>
-
-                            <span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita setelah sumber terverifikasi ditentukan.</span><span class="sn-other-tag">Menunggu sumber data</span></span>
-
-                        </div>
+                            <span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Daftar informasi berita banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Berita</span></span>
+                        </a>
 
                     </div>
 
-                    <div class="sn-other-footer">Menu yang diberi label belum dibuat atau menunggu data belum tersedia sebagai fitur aktif.</div>
+                    <div class="sn-other-footer">Pilih menu untuk membuka informasi, panduan, statistik, atau berita kebencanaan.</div>
 
                 </div>
 
             </div>
-
-
 
             @auth
 
@@ -1651,8 +1423,6 @@
                     Profil
 
                 </a>
-
-
 
                 <form action="{{ route('logout') }}" method="POST">
 
@@ -1674,8 +1444,6 @@
 
                 </a>
 
-
-
                 <a href="{{ route('register') }}" class="nav-link">
 
                     Daftar
@@ -1686,15 +1454,9 @@
 
         </nav>
 
-
-
     </header>
 
-
-
     <main class="dashboard">
-
-
 
         <!-- WELCOME -->
 
@@ -1722,8 +1484,6 @@
 
             </div>
 
-
-
             <div class="date-chip">
 
                 📍 Fokus: Sumatera Barat
@@ -1732,15 +1492,11 @@
 
         </section>
 
-
-
         <!-- INFORMASI PERINGATAN -->
 
         <section class="warning-panel">
 
             <div class="warning-icon">⚠️</div>
-
-
 
             <div>
 
@@ -1762,8 +1518,6 @@
 
             </div>
 
-
-
             <span class="warning-badge">
 
                 Belum terhubung
@@ -1772,17 +1526,11 @@
 
         </section>
 
-
-
         <div class="main-grid">
-
-
 
             <!-- KOLOM UTAMA -->
 
             <div class="content-column">
-
-
 
                 <!-- RINGKASAN -->
 
@@ -1806,8 +1554,6 @@
 
                         </div>
 
-
-
                         <span class="status-pill">
 
                             <span class="status-dot"></span>
@@ -1818,11 +1564,7 @@
 
                     </div>
 
-
-
                     <div class="metrics-grid">
-
-
 
                         <article class="metric-card">
 
@@ -1844,8 +1586,6 @@
 
                         </article>
 
-
-
                         <article class="metric-card">
 
                             <div class="metric-top">
@@ -1865,8 +1605,6 @@
                             </p>
 
                         </article>
-
-
 
                         <article class="metric-card">
 
@@ -1888,13 +1626,9 @@
 
                         </article>
 
-
-
                     </div>
 
                 </section>
-
-
 
                 <!-- PRATINJAU PETA -->
 
@@ -1920,15 +1654,13 @@
 
                     </div>
 
-
-
                     <div class="map-preview" aria-label="Pratinjau peta interaktif Sumatera Barat">
 
                         <div id="home-map"></div>
 
                         <div class="map-preview-label">
 
-                            <svg xmlns="http://www\.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 
                                 <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/>
 
@@ -1948,8 +1680,6 @@
 
                     </div>
 
-
-
                     <a href="/maps" class="map-open">
 
                         Buka Peta Interaktif →
@@ -1957,8 +1687,6 @@
                     </a>
 
                 </section>
-
-
 
                 <!-- AKSES FITUR -->
 
@@ -1984,11 +1712,7 @@
 
                     </div>
 
-
-
                     <div class="feature-list">
-
-
 
                         <a href="/risk-check" class="feature-link">
 
@@ -2018,8 +1742,6 @@
 
                         </a>
 
-
-
                         <a href="/maps" class="feature-link">
 
                             <div class="feature-row">
@@ -2047,8 +1769,6 @@
                             </div>
 
                         </a>
-
-
 
                         <a href="/report" class="feature-link">
 
@@ -2078,13 +1798,9 @@
 
                         </a>
 
-
-
                     </div>
 
                 </section>
-
-
 
                 <!-- BERITA -->
 
@@ -2110,11 +1826,7 @@
 
                     </div>
 
-
-
                     <div class="news-placeholder">
-
-
 
                         <article class="news-item">
 
@@ -2140,8 +1852,6 @@
 
                         </article>
 
-
-
                         <article class="news-item">
 
                             <div class="news-thumbnail">⛰️</div>
@@ -2166,23 +1876,15 @@
 
                         </article>
 
-
-
                     </div>
 
                 </section>
 
-
-
             </div>
-
-
 
             <!-- SIDEBAR -->
 
             <aside class="side-column">
-
-
 
                 <!-- STATUS INFORMASI -->
 
@@ -2208,11 +1910,7 @@
 
                     </div>
 
-
-
                     <div class="feature-list">
-
-
 
                         <div class="feature-row">
 
@@ -2232,8 +1930,6 @@
 
                         </div>
 
-
-
                         <div class="feature-row">
 
                             <div class="feature-icon">⚠️</div>
@@ -2251,8 +1947,6 @@
                             </div>
 
                         </div>
-
-
 
                         <div class="feature-row">
 
@@ -2272,13 +1966,9 @@
 
                         </div>
 
-
-
                     </div>
 
                 </section>
-
-
 
                 <!-- SHELTER -->
 
@@ -2304,8 +1994,6 @@
 
                     </div>
 
-
-
                     <div class="rounded-xl border border-dashed border-emerald-200 bg-emerald-50 p-5 text-center">
 
                         <div class="text-3xl">🏠</div>
@@ -2326,8 +2014,6 @@
 
                     </div>
 
-
-
                     <a href="/maps" class="map-open">
 
                         Lihat Peta →
@@ -2335,8 +2021,6 @@
                     </a>
 
                 </section>
-
-
 
                 <!-- DONASI -->
 
@@ -2362,8 +2046,6 @@
 
                     </div>
 
-
-
                     <div class="rounded-xl bg-emerald-50 p-5 text-center">
 
                         <div class="text-3xl">🤝</div>
@@ -2384,8 +2066,6 @@
 
                     </div>
 
-
-
                     <a href="/donate" class="map-open">
 
                         Lihat Program Donasi →
@@ -2394,15 +2074,9 @@
 
                 </section>
 
-
-
             </aside>
 
-
-
         </div>
-
-
 
         <!-- CALL TO ACTION -->
 
@@ -2426,8 +2100,6 @@
 
             </div>
 
-
-
             <a href="/report" class="donation-button">
 
                 Buat Laporan Bencana →  
@@ -2436,11 +2108,7 @@
 
         </section>
 
-
-
     </main>
-
-
 
     <footer class="footer">
 
@@ -2456,11 +2124,7 @@
 
     </footer>
 
-
-
 </div>
-
-
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
@@ -2472,8 +2136,6 @@
 
         if (!mapElement || typeof L === 'undefined') return;
 
-
-
         const homeMap = L.map('home-map', {
 
             scrollWheelZoom: false,
@@ -2482,17 +2144,13 @@
 
         }).setView([-0.9471, 100.4172], 8);
 
-
-
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
-            attribution: '&copy; <a href="https://www\.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>',
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>',
 
             maxZoom: 19
 
         }).addTo(homeMap);
-
-
 
         // Penanda ini hanya menunjukkan pusat wilayah Sumatera Barat, bukan titik bahaya.
 
@@ -2508,25 +2166,17 @@
 
         });
 
-
-
         L.marker([-0.9471, 100.4172], { icon: centerPin })
 
             .addTo(homeMap)
 
             .bindPopup('<strong>Sumatera Barat</strong><br>Pusat tampilan peta');
 
-
-
         setTimeout(function () { homeMap.invalidateSize(); }, 150);
 
     });
 
 </script>
-
-
-
-
 
 <script>
 
@@ -2546,8 +2196,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!trigger || !panel) return;
 
-
-
         function closeMenu() {
 
             panel.hidden = true;
@@ -2557,8 +2205,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (chevron) chevron.style.transform = '';
 
         }
-
-
 
         trigger.addEventListener('click', function (event) {
 
@@ -2574,15 +2220,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
 
-
-
         document.addEventListener('click', function (event) {
 
             if (!wrap.contains(event.target)) closeMenu();
 
         });
-
-
 
         document.addEventListener('keydown', function (event) {
 
@@ -2596,8 +2238,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
 
-
-
         panel.addEventListener('click', function (event) {
 
             if (event.target.closest('a')) closeMenu();
@@ -2609,8 +2249,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 </script>
-
-
 
 </body>
 

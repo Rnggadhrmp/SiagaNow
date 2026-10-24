@@ -66,6 +66,7 @@
         }
 
         .sn-header {
+            box-sizing: border-box;
             width: 100%;
             max-width: 1440px;
             margin: 0 auto;
@@ -94,9 +95,9 @@
         }
 
         .sn-brand-symbol {
-            width: 48px;
-            height: 48px;
-            border-radius: 15px;
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
             display: grid;
             place-items: center;
             background: var(--forest);
@@ -244,7 +245,7 @@
 <body class="min-h-screen text-slate-800"
       style="background:radial-gradient(ellipse at 15% 0%,#bde7d8 0,transparent 36%),linear-gradient(145deg,#e5f5ec,#f8fbf8 52%,#c5e8d8)">
 
-<header class="mx-auto max-w-[1500px] px-4 pt-5 sm:px-6">
+<header class="mx-auto w-full max-w-[1440px] px-4 pt-5 sm:px-6">
     <div class="sn-header">
         <a href="{{ route('home') }}" class="flex items-center gap-3 no-underline" aria-label="SiagaNow beranda">
             <span class="sn-brand-symbol" aria-hidden="true">
@@ -253,8 +254,8 @@
                 </svg>
             </span>
             <span>
-                <span class="block text-2xl font-black tracking-tight" style="color:var(--forest)">SiagaNow</span>
-                <span class="block text-xs font-semibold tracking-wide text-emerald-900/60">Siaga Bencana, Selamat Bersama</span>
+                <span class="block text-[30px] font-black tracking-tight leading-none" style="color:var(--forest)">SiagaNow</span>
+                <span class="mt-1 block text-sm font-semibold tracking-wide text-emerald-900/60">Siaga Bencana, Selamat Bersama</span>
             </span>
         </a>
 
@@ -288,28 +289,28 @@
                 <div class="sn-other-panel" id="sn-other-panel" data-sn-other-panel hidden>
                     <h2 class="sn-other-panel-heading">Informasi &amp; Kesiapsiagaan Bencana</h2>
                     <div class="sn-other-grid">
-                        <div class="sn-other-item is-planned">
+                        <a href="{{ route('informasi-banjir') }}" class="sn-other-item">
                             <span class="sn-other-icon" aria-hidden="true">≋</span>
-                            <span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Halaman belum dibuat</span></span>
-                        </div>
-                        <div class="sn-other-item is-planned">
+                            <span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Lihat Informasi</span></span>
+                        </a>
+                        <a href="{{ route('informasi-longsor') }}" class="sn-other-item">
                             <span class="sn-other-icon" aria-hidden="true">⌁</span>
-                            <span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Halaman belum dibuat</span></span>
-                        </div>
-                        <div class="sn-other-item is-planned">
+                            <span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span>
+                        </a>
+                        <a href="{{ route('statistik-kejadian') }}" class="sn-other-item">
                             <span class="sn-other-icon" aria-hidden="true">▥</span>
-                            <span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan statistik setelah sumber data tersedia.</span><span class="sn-other-tag">Menunggu data</span></span>
-                        </div>
-                        <div class="sn-other-item is-planned">
+                            <span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Statistik</span></span>
+                        </a>
+                        <a href="{{ route('panduan-kesiapsiagaan') }}" class="sn-other-item">
                             <span class="sn-other-icon" aria-hidden="true">☷</span>
-                            <span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Halaman belum dibuat</span></span>
-                        </div>
-                        <div class="sn-other-item is-planned">
+                            <span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span>
+                        </a>
+                        <a href="{{ route('berita-kebencanaan') }}" class="sn-other-item">
                             <span class="sn-other-icon" aria-hidden="true">▤</span>
-                            <span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita setelah sumber terverifikasi ditentukan.</span><span class="sn-other-tag">Menunggu sumber data</span></span>
-                        </div>
+                            <span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Daftar informasi berita banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Berita</span></span>
+                        </a>
                     </div>
-                    <p class="sn-other-footer">Menu yang diberi label belum dibuat atau menunggu data belum tersedia sebagai fitur aktif.</p>
+                    <p class="sn-other-footer">Pilih menu untuk membuka informasi, panduan, statistik, atau berita kebencanaan.</p>
                 </div>
             </div>
 
