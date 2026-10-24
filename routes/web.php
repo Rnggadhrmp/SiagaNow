@@ -1,41 +1,50 @@
-    <?php
+<?php
 
-    use App\Http\Controllers\AuthController;
-    use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MapsController;
+use App\Http\Controllers\RiskCheckController;
+use Illuminate\Support\Facades\Route;
 
-    Route::get('/', function () {
-        return view('welcome');
-    })->name('home');
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
 
-    Route::get('/maps', function () {
-        return view('maps');
-    })->name('maps');
+// Maps
+Route::get('/maps', [MapsController::class, 'index'])
+    ->name('maps');
+Route::get('/api/shelters', [MapsController::class, 'search'])
+    ->name('shelters.search');
 
-    Route::get('/risk-check', function () {
-        return view('risk-check');
-    })->name('risk-check');
+// Risk Check — sementara masih menampilkan view
+Route::middleware('auth')->group(function () {
+    Route::get('/risk-check', [RiskCheckController::class, 'index'])
+        ->name('risk-check');
 
-    // Profil pengguna
-    Route::get('/profil', function () {
-        return view('profil');
-    })->middleware('auth')->name('profil');
+    Route::post('/risk-check', [RiskCheckController::class, 'store'])
+        ->name('risk-check.store');
+});
 
-    // Autentikasi untuk pengunjung yang belum login
-    Route::middleware('guest')->group(function () {
-        Route::get('/login', [AuthController::class, 'showLogin'])
-            ->name('login');
+// Profil pengguna
+Route::get('/profil', function () {
+    return view('profile');
+})->middleware('auth')->name('profile');
 
-        Route::post('/login', [AuthController::class, 'login'])
-            ->name('login.store');
+// Autentikasi untuk pengguna yang belum login
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLogin'])
+        ->name('login');
 
-        Route::get('/register', [AuthController::class, 'showRegister'])
-            ->name('register');
+    Route::post('/login', [AuthController::class, 'login'])
+        ->name('login.store');
 
-        Route::post('/register', [AuthController::class, 'register'])
-            ->name('register.store');
-    });
+    Route::get('/register', [AuthController::class, 'showRegister'])
+        ->name('register');
 
-    // Logout hanya untuk pengguna yang sudah login
-    Route::post('/logout', [AuthController::class, 'logout'])
-        ->middleware('auth')
-        ->name('logout');
+    Route::post('/register', [AuthController::class, 'register'])
+        ->name('register.store');
+});
+
+// Logout hanya untuk pengguna yang sudah login
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');

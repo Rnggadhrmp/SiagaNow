@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -381,7 +380,7 @@
 
                 <p id="shelter-status"
                    class="mt-3 text-xs leading-5 text-slate-500">
-                    Database shelter belum terhubung. Pencarian belum menghasilkan daftar lokasi.
+                    Pencarian shelter akan mengambil data dari database jika tersedia.
                 </p>
             </section>
 
@@ -572,16 +571,65 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     });
 
-    document.getElementById('shelter-search')?.addEventListener('submit', function (event) {
-        event.preventDefault();
+    document.getElementById('shelter-search')?.addEventListener('submit', async function (event) {
+    event.preventDefault();
 
-        const query = document.getElementById('shelter').value.trim();
-        const shelterStatus = document.getElementById('shelter-status');
+    const query = document.getElementById('shelter').value.trim();
+    const shelterStatus = document.getElementById('shelter-status');
 
-        shelterStatus.textContent = query
-            ? 'Kata kunci "' + query + '" diterima, tetapi pencarian belum bisa dijalankan karena database shelter belum terhubung.'
-            : 'Masukkan nama shelter atau wilayah terlebih dahulu.';
-    });
+    if (!query) {
+        shelterStatus.textContent = 'Masukkan nama shelter atau wilayah terlebih dahulu.';
+        return;
+    }
+
+    shelterStatus.textContent = 'Sedang mencari shelter...';
+
+    try {
+        const params = new URLSearchParams({ q: query });
+        const response = await fetch(`/api/shelters?${params.toString()}`, {
+            headers: { Accept: 'application/json' }
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Pencarian gagal.');
+        }
+
+        shelterStatus.replaceChildren();
+
+        const message = document.createElement('p');
+        message.textContent = result.message;
+        shelterStatus.appendChild(message);
+
+        result.data.forEach((shelter) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'mt-2 block w-full rounded-lg border border-emerald-100 p-3 text-left';
+            button.textContent = shelter.name + (shelter.address ? ' — ' + shelter.address : '');
+
+            button.addEventListener('click', () => {
+                const lat = Number(shelter.latitude);
+                const lng = Number(shelter.longitude);
+
+                if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+                map.setView([lat, lng], 15);
+
+                L.popup()
+                    .setLatLng([lat, lng])
+                    .setContent(
+                        document.createTextNode(shelter.name)
+                    )
+                    .openOn(map);
+            });
+
+            shelterStatus.appendChild(button);
+        });
+    } catch (error) {
+        shelterStatus.textContent = 'Pencarian gagal. Periksa koneksi server lalu coba lagi.';
+    }
+});
 
     requestAnimationFrame(function () {
         map.invalidateSize();

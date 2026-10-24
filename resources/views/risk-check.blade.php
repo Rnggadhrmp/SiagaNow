@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Cek Risiko Rumah | SiagaNow</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -430,10 +431,23 @@
 
                 </div>
 
+                <div class="mt-4 rounded-xl border border-emerald-100 bg-white p-4">
+                    <h3 class="font-extrabold text-emerald-900">Simpan Pemeriksaan</h3>
+                    <p class="mt-1 text-sm leading-5 text-slate-600">
+                        Pilih lokasi rumah pada peta terlebih dahulu. Pemeriksaan akan disimpan ke akun Anda;
+                        skor risiko belum tersedia karena data pendukung terverifikasi belum terhubung.
+                    </p>
+                    <button id="save-assessment" type="button" class="btn mt-3 w-full">
+                        Simpan Pemeriksaan
+                    </button>
+                    <p id="assessment-status" class="mt-3 text-sm leading-5 text-slate-600"
+                       role="status" aria-live="polite"></p>
+                </div>
+
                 <div class="mt-4 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-950">
-                    <strong>Langkah selanjutnya:</strong>
-                    hubungkan data resmi kebencanaan, elevasi, dan cuaca
-                    sebelum menghasilkan skor risiko atau rekomendasi evakuasi.
+                    <strong>Catatan:</strong>
+                    hasil risiko dan rekomendasi evakuasi belum dapat diberikan sampai data resmi
+                    kebencanaan, elevasi, dan cuaca tersedia.
                 </div>
 
                 <a href="{{ route('maps') }}"
@@ -483,8 +497,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }).addTo(map);
 
     let homeMarker = null;
+    let selectedHomeLat = null;
+    let selectedHomeLon = null;
 
     function setHomeLocation(lat, lon, label) {
+        selectedHomeLat = lat;
+        selectedHomeLon = lon;
         const point = [lat, lon];
 
         if (homeMarker) {
@@ -614,6 +632,65 @@ document.addEventListener('DOMContentLoaded', function () {
                 'Pencarian alamat gagal. Periksa koneksi internet atau tandai lokasi langsung pada peta.';
         } finally {
             submit.disabled = false;
+        }
+    });
+
+    // Simpan lokasi dan status pemeriksaan ke backend.
+    document.getElementById('save-assessment').addEventListener('click', async function () {
+        const status = document.getElementById('assessment-status');
+        const button = document.getElementById('save-assessment');
+
+        if (selectedHomeLat === null || selectedHomeLon === null) {
+            status.textContent = 'Pilih lokasi rumah pada peta atau cari alamat terlebih dahulu.';
+            return;
+        }
+
+        button.disabled = true;
+        status.textContent = 'Menyimpan pemeriksaan…';
+
+        try {
+            const response = await fetch('/risk-check', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    latitude: selectedHomeLat,
+                    longitude: selectedHomeLon
+                })
+            });
+
+            const contentType = response.headers.get('content-type') || '';
+            const result = contentType.includes('application/json')
+                ? await response.json()
+                : {};
+
+            if (response.status === 401 || response.redirected) {
+                status.textContent = 'Silakan masuk ke akun SiagaNow terlebih dahulu untuk menyimpan pemeriksaan.';
+                return;
+            }
+
+            if (!response.ok) {
+                if (response.status === 419) {
+                    status.textContent = 'Sesi halaman kedaluwarsa. Muat ulang halaman lalu coba lagi.';
+                    return;
+                }
+                if (response.status === 422 && result.errors) {
+                    status.textContent = Object.values(result.errors).flat().join(' ');
+                    return;
+                }
+                throw new Error(result.message || 'Pemeriksaan gagal disimpan.');
+            }
+
+            status.textContent = (result.message || 'Pemeriksaan berhasil disimpan.') +
+                ' Status: ' + (result.data?.status || 'pending') +
+                '. Skor risiko belum dihitung.';
+        } catch (error) {
+            status.textContent = 'Gagal menyimpan pemeriksaan. Periksa koneksi dan pastikan Anda sudah masuk.';
+        } finally {
+            button.disabled = false;
         }
     });
 
