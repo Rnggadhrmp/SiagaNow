@@ -15,6 +15,14 @@
         return view('risk-check');
     })->name('risk-check');
 
+    Route::get('/report', function () {
+        return view('report');
+    })->name('report');
+
+    Route::get('/donate', function () {
+        return view('donate');
+    })->name('donate');
+
     // Profil pengguna
     Route::get('/profil', function () {
         return view('profil');
