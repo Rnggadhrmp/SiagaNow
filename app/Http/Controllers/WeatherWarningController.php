@@ -213,20 +213,32 @@ class WeatherWarningController extends Controller
     }
 
     /** CAP polygons use "latitude,longitude latitude,longitude ...". */
-    private function pointInPolygon(string $polygon, float $lat, float $lng): bool
+    private function pointInPolygon(string $polygon, float $lat, float $lng): ?bool
     {
         $points = [];
-        foreach (preg_split('/\s+/', trim($polygon)) as $pair) {
+        $pairs = preg_split('/\s+/', trim($polygon), -1, PREG_SPLIT_NO_EMPTY);
+        if (!$pairs) {
+            return null;
+        }
+
+        foreach ($pairs as $pair) {
             $coords = explode(',', trim($pair));
-            if (count($coords) < 2 || !is_numeric($coords[0]) || !is_numeric($coords[1])) {
-                continue;
+            if (count($coords) !== 2 || !is_numeric($coords[0]) || !is_numeric($coords[1])) {
+                return null;
             }
-            $points[] = [(float) $coords[0], (float) $coords[1]];
+
+            $pointLat = (float) $coords[0];
+            $pointLng = (float) $coords[1];
+            if ($pointLat < -90 || $pointLat > 90 || $pointLng < -180 || $pointLng > 180) {
+                return null;
+            }
+
+            $points[] = [$pointLat, $pointLng];
         }
 
         $count = count($points);
         if ($count < 3) {
-            return false;
+            return null;
         }
 
         $inside = false;

@@ -322,9 +322,9 @@
 
         <p class="mt-3 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base">
             Cari alamat rumah dan tandai lokasinya pada peta.
-            Saat ini peta dapat membantu melihat lokasi, tetapi hasil risiko
-            banjir dan tanah longsor belum dapat dihitung karena data risiko
-            resmi belum terhubung.
+            Peringatan cuaca aktif diperiksa melalui feed BMKG berdasarkan lokasi terpilih.
+            Penilaian bahaya banjir dan tanah longsor belum tersedia karena layer risiko resmi
+            belum terhubung.
         </p>
     </section>
 
@@ -421,25 +421,22 @@
             <!-- Peringatan risiko -->
             <section class="rounded-[21px] border border-red-200 bg-red-50 p-5 sm:p-6">
                 <div class="flex items-start gap-3">
-                    <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-red-100 text-xl">
-                        ⚠️
-                    </span>
-
+                    <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-red-100 text-xl" aria-hidden="true">⚠️</span>
                     <div>
-                        <h2 class="text-lg font-extrabold text-red-900">
-                            Peringatan Risiko
-                        </h2>
-
-                        <p class="mt-1 text-sm leading-5 text-red-800">
-                            Belum dapat ditentukan
+                        <h2 class="text-lg font-extrabold text-red-900">Peringatan Cuaca BMKG</h2>
+                        <p id="warning-heading-status" class="mt-1 text-sm leading-5 text-red-800">
+                            Pilih lokasi untuk memeriksa peringatan BMKG.
                         </p>
                     </div>
                 </div>
-
-                <p class="mt-3 text-sm leading-6 text-red-800">
-                    SiagaNow belum terhubung dengan data peringatan cuaca atau
-                    peta bahaya terverifikasi. Panel ini tidak menyatakan lokasi
-                    rumah aman maupun berbahaya.
+                <div id="weather-warning-results" class="mt-3 space-y-3" aria-live="polite">
+                    <p class="text-sm leading-6 text-red-800">
+                        Peringatan BMKG akan diperiksa setelah lokasi dipilih. Hasil kosong bukan jaminan lokasi aman.
+                    </p>
+                </div>
+                <p class="mt-3 text-xs leading-5 text-red-800">
+                    Sumber: <a href="https://www.bmkg.go.id/alerts/nowcast/id" target="_blank" rel="noopener noreferrer" class="font-bold underline">BMKG</a>.
+                    Peringatan cuaca bukan pengganti informasi resmi darurat. Risiko banjir dan longsor belum dinilai oleh panel ini.
                 </p>
             </section>
 
@@ -573,6 +570,95 @@ document.addEventListener('DOMContentLoaded', function () {
     let homeMarker = null;
     let selectedHomeLat = null;
     let selectedHomeLon = null;
+    let warningRequestNumber = 0;
+
+    const warningHeadingStatus = document.getElementById('warning-heading-status');
+    const warningResults = document.getElementById('weather-warning-results');
+
+    function clearWarningResults() {
+        if (warningResults) warningResults.replaceChildren();
+    }
+
+    function addWarningText(parent, tagName, text, className) {
+        const element = document.createElement(tagName);
+        element.textContent = text;
+        if (className) element.className = className;
+        parent.appendChild(element);
+        return element;
+    }
+
+    function renderWeatherWarnings(data) {
+        if (!warningHeadingStatus || !warningResults) return;
+        clearWarningResults();
+
+        const status = data && data.status ? data.status : 'unknown';
+        const warnings = Array.isArray(data && data.warnings) ? data.warnings : [];
+        const heading = {
+            warning_found: 'Peringatan BMKG ditemukan untuk titik ini.',
+            no_warning_found: 'Tidak ditemukan poligon peringatan BMKG yang mencakup titik ini.',
+            unknown: 'Status peringatan belum dapat diverifikasi.'
+        };
+        warningHeadingStatus.textContent = heading[status] || heading.unknown;
+
+        if (status === 'warning_found' && warnings.length > 0) {
+            warningHeadingStatus.className = 'mt-1 text-sm leading-5 font-bold text-red-900';
+            warnings.forEach(function (warning) {
+                const card = document.createElement('article');
+                card.className = 'rounded-xl border border-red-200 bg-white p-3';
+                addWarningText(card, 'h3', warning.title || 'Peringatan cuaca BMKG', 'font-extrabold text-red-900');
+                if (warning.area) addWarningText(card, 'p', 'Wilayah: ' + warning.area, 'mt-1 text-sm text-slate-700');
+                if (warning.description) addWarningText(card, 'p', warning.description, 'mt-2 whitespace-pre-line text-sm leading-6 text-slate-700');
+                if (warning.effective_at) addWarningText(card, 'p', 'Mulai: ' + warning.effective_at, 'mt-2 text-xs text-slate-600');
+                if (warning.expires_at) addWarningText(card, 'p', 'Berakhir: ' + warning.expires_at, 'text-xs text-slate-600');
+                if (warning.detail_url && /^https:\/\//i.test(warning.detail_url)) {
+                    const link = document.createElement('a');
+                    link.href = warning.detail_url;
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    link.textContent = 'Lihat detail BMKG';
+                    link.className = 'mt-2 inline-block text-sm font-bold text-emerald-800 underline';
+                    card.appendChild(link);
+                }
+                warningResults.appendChild(card);
+            });
+            addWarningText(warningResults, 'p', 'Ikuti arahan BMKG dan otoritas setempat. Hasil ini hanya pemeriksaan peringatan cuaca, bukan penilaian lengkap risiko bencana.', 'text-xs leading-5 text-red-900');
+            return;
+        }
+
+        warningHeadingStatus.className = 'mt-1 text-sm leading-5 ' + (status === 'no_warning_found' ? 'text-amber-900' : 'text-red-800');
+        const messageText = data && data.message ? data.message : 'Peringatan belum dapat diperiksa. Coba lagi nanti.';
+        addWarningText(warningResults, 'p', messageText, 'text-sm leading-6 text-red-800');
+        if (status === 'no_warning_found') {
+            addWarningText(warningResults, 'p', 'Tidak ditemukannya peringatan pada titik ini bukan jaminan lokasi aman dan tidak menggantikan peringatan darurat.', 'text-xs leading-5 text-amber-900');
+        }
+    }
+
+    async function checkWeatherWarnings(lat, lon) {
+        const requestNumber = ++warningRequestNumber;
+        if (warningHeadingStatus) warningHeadingStatus.textContent = 'Memeriksa feed peringatan BMKG…';
+        if (warningResults) {
+            clearWarningResults();
+            addWarningText(warningResults, 'p', 'Mengambil peringatan BMKG untuk koordinat terpilih…', 'text-sm leading-6 text-red-800');
+        }
+
+        try {
+            const query = new URLSearchParams({ lat: String(lat), lng: String(lon) });
+            const response = await fetch('/api/weather-warning?' + query.toString(), {
+                headers: { 'Accept': 'application/json' }
+            });
+            const data = await response.json();
+            if (requestNumber !== warningRequestNumber) return;
+            if (!response.ok && (!data || !data.status)) throw new Error('Layanan peringatan tidak tersedia.');
+            renderWeatherWarnings(data);
+        } catch (error) {
+            if (requestNumber !== warningRequestNumber) return;
+            renderWeatherWarnings({
+                status: 'unknown',
+                message: 'Peringatan BMKG tidak dapat diperiksa saat ini. Coba lagi nanti; lokasi belum dapat dinyatakan aman.',
+                warnings: []
+            });
+        }
+    }
 
     function setHomeLocation(lat, lon, label) {
         selectedHomeLat = lat;
@@ -594,7 +680,8 @@ document.addEventListener('DOMContentLoaded', function () {
             lat.toFixed(5) + ', ' + lon.toFixed(5);
 
         message.textContent = label ||
-            'Lokasi ditandai. Penilaian risiko belum tersedia karena data resmi belum terhubung.';
+            'Lokasi ditandai. Peringatan cuaca BMKG akan diperiksa; penilaian bahaya banjir dan longsor belum tersedia.';
+        checkWeatherWarnings(lat, lon);
     }
 
     // Memilih lokasi rumah dengan mengeklik peta.
