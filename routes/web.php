@@ -23,6 +23,21 @@
         return view('donate');
     })->name('donate');
 
+    Route::view('/informasi-banjir', 'informasi-banjir')
+    ->name('informasi-banjir');
+
+    Route::view('/informasi-longsor', 'informasi-longsor')
+    ->name('informasi-longsor');
+
+    Route::view('/statistik-kejadian', 'statistik-kejadian')
+    ->name('statistik-kejadian');
+
+    Route::view('/panduan-kesiapsiagaan', 'panduan-kesiapsiagaan')
+    ->name('panduan-kesiapsiagaan');
+
+    Route::view('/berita-kebencanaan', 'berita-kebencanaan')
+    ->name('berita-kebencanaan');
+    
     // Profil pengguna
     Route::get('/profil', function () {
         return view('profil');

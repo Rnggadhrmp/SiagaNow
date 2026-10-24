@@ -44,10 +44,27 @@
                 <span class="sn-other-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 22 20H2L12 3Z"/><path d="M12 9v5M12 17h.01"/></svg></span>
                 <span><span class="sn-other-title">Cek Risiko Rumah</span><span class="sn-other-desc">Periksa informasi risiko rumah melalui halaman Cek Risiko.</span></span>
             </a>
-            <div class="sn-other-item is-planned" aria-disabled="true">
-                <span class="sn-other-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></svg></span>
-                <span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Informasi penyebab, dampak, tanda bahaya, dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Halaman belum dibuat</span></span>
-            </div>
+
+            <a href="{{ route('informasi-banjir') }}" class="sn-other-item">
+                <span class="sn-other-icon">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/>
+                        <path d="M9 21v-7h6v7"/>
+                    </svg>
+                </span>
+
+                <span>
+                    <span class="sn-other-title">Informasi Bencana Banjir</span>
+                    <span class="sn-other-desc">
+                        Informasi penyebab, dampak, tanda bahaya, dan langkah kesiapsiagaan banjir.
+                    </span>
+                    <span class="sn-other-tag">Lihat Informasi</span>
+                </span>
+            </a>
+
             <div class="sn-other-item is-planned" aria-disabled="true">
                 <span class="sn-other-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 18 6-6 4 3 8-9"/><path d="M14 6h7v7"/></svg></span>
                 <span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Informasi tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Halaman belum dibuat</span></span>
