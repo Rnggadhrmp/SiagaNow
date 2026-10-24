@@ -747,6 +747,33 @@
             </a>
             <a href="/other" class="nav-link">
                 <span>☰</span> Other
+                
+        @auth
+            <a href="{{ route('profile') }}"
+            class="rounded-xl px-4 py-2 font-semibold hover:bg-emerald-100">
+                Profil
+            </a>
+
+            <form action="{{ route('logout') }}" method="POST"
+                class="inline">
+                @csrf
+                <button type="submit"
+                    class="rounded-xl bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700">
+                    Keluar
+                </button>
+            </form>
+        @else
+            <a href="{{ route('login') }}"
+            class="rounded-xl px-4 py-2 font-semibold">
+                Masuk
+            </a>
+
+            <a href="{{ route('register') }}"
+            class="rounded-xl bg-emerald-800 px-4 py-2 font-semibold text-white">
+                Daftar
+            </a>
+        @endauth
+
             </a>
         </nav>
     </header>
