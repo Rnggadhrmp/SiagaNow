@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MapsController;
 use App\Http\Controllers\RiskCheckController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WeatherWarningController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -56,3 +57,8 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
+
+    Route::get('/api/weather-warning', [
+    WeatherWarningController::class,
+    'check',
+])->name('weather-warning.check');
