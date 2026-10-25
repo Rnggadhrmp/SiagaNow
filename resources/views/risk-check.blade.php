@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 
 <html lang="id">
@@ -1075,10 +1073,9 @@ document.addEventListener('DOMContentLoaded', function () {
             lat.toFixed(5) + ', ' + lon.toFixed(5);
 
         message.textContent = label ||
-message.textContent = label ||
-    'Lokasi ditandai. Peringatan cuaca BMKG akan diperiksa; penilaian bahaya banjir dan longsor belum tersedia.';
+            'Lokasi ditandai. Peringatan cuaca BMKG akan diperiksa; penilaian bahaya banjir dan longsor belum tersedia.';
 
-checkWeatherWarnings(lat, lon);>>>>>> origin/main
+        checkWeatherWarnings(lat, lon);
     }
 
     // Memilih lokasi rumah dengan mengeklik peta.
