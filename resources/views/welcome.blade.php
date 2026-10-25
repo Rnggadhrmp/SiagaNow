@@ -14,8 +14,6 @@
 
     <meta name="description" content="SiagaNow membantu masyarakat mendapatkan informasi kebencanaan, cuaca, shelter, dan kesiapsiagaan banjir serta tanah longsor.">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
     <style>
@@ -1290,6 +1288,8 @@
 
     </style>
 
+@vite(['resources/css/app.css'])
+<link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
 </head>
 
 <body>
@@ -1382,29 +1382,29 @@
 
                         <a href="{{ route('informasi-banjir') }}" class="sn-other-item">
 
-                                <span class="sn-other-icon" aria-hidden="true">≋</span>
+                                <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'water', 'size' => 20])</span>
 
                                 <span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Lihat Informasi</span></span>
 
                             </a>
 
                         <a href="{{ route('informasi-longsor') }}" class="sn-other-item">
-                            <span class="sn-other-icon" aria-hidden="true">⌁</span>
+                            <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'mountain', 'size' => 20])</span>
                             <span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span>
                         </a>
 
                         <a href="{{ route('statistik-kejadian') }}" class="sn-other-item">
-                            <span class="sn-other-icon" aria-hidden="true">▥</span>
+                            <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'list', 'size' => 20])</span>
                             <span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Statistik</span></span>
                         </a>
 
                         <a href="{{ route('panduan-kesiapsiagaan') }}" class="sn-other-item">
-                            <span class="sn-other-icon" aria-hidden="true">☷</span>
+                            <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'shield', 'size' => 20])</span>
                             <span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span>
                         </a>
 
                         <a href="{{ route('berita-kebencanaan') }}" class="sn-other-item">
-                            <span class="sn-other-icon" aria-hidden="true">▤</span>
+                            <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'info', 'size' => 20])</span>
                             <span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Daftar informasi berita banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Berita</span></span>
                         </a>
 
@@ -1460,70 +1460,31 @@
 
         <!-- WELCOME -->
 
-        <section class="welcome-card">
-
-            <div>
-
-                <div class="eyebrow">Platform Kesiapsiagaan Bencana</div>
-
-                <h1 class="welcome-title">
-
-                    Selamat Datang di SiagaNow
-
-                </h1>
-
-                <p class="welcome-description">
-
-                    Tetap waspada, kenali risiko di sekitarmu, dan dapatkan
-
-                    informasi kesiapsiagaan banjir serta tanah longsor
-
-                    dalam satu platform.
-
-                </p>
-
+        <section class="welcome-card" aria-labelledby="home-title">
+            <div class="hero-copy">
+                <div class="eyebrow">Kesiapsiagaan Bencana · Sumatera Barat</div>
+                <h1 id="home-title" class="welcome-title">Siaga lebih baik<br>dimulai dari informasi yang jelas.</h1>
+                <p class="welcome-description">Pantau prakiraan cuaca, kenali batas data risiko yang tersedia, temukan lokasi pada peta, dan laporkan kejadian yang Anda saksikan.</p>
+                <div class="hero-actions">
+                    <a href="{{ route('maps') }}" class="hero-action-primary">Jelajahi peta <span aria-hidden="true">→</span></a>
+                    <a href="{{ route('report') }}" class="hero-action-secondary">Laporkan kejadian</a>
+                </div>
             </div>
-
-            <div class="date-chip">
-
-                📍 Fokus: Sumatera Barat
-
-            </div>
-
+            <figure class="hero-landscape">
+                <img src="{{ asset('images/siaganow-bg.png') }}" alt="Ilustrasi perbukitan hijau Sumatera Barat" fetchpriority="high">
+                <figcaption>SiagaNow · Sumatera Barat</figcaption>
+            </figure>
         </section>
 
         <!-- INFORMASI PERINGATAN -->
 
-        <section class="warning-panel">
-
-            <div class="warning-icon">⚠️</div>
-
+        <section class="warning-panel" aria-label="Status peringatan dini">
+            <div class="warning-icon">@include('partials.siaga-icon', ['name' => 'info', 'size' => 24])</div>
             <div>
-
-                <div class="warning-title">
-
-                    Pusat Informasi Kesiapsiagaan
-
-                </div>
-
-                <p class="warning-text">
-
-                    Informasi peringatan dini belum terhubung dengan sumber
-
-                    resmi. Periksa pengumuman BMKG dan BPBD untuk mendapatkan
-
-                    informasi kebencanaan terkini.
-
-                </p>
-
+                <div class="warning-title">Status peringatan dini</div>
+                <p class="warning-text">Prakiraan cuaca BMKG tersedia di bawah. Status peringatan dini belum diperiksa pada halaman ini; lihat kanal resmi BMKG dan BPBD.</p>
             </div>
-
-            <span class="warning-badge">
-
-                Belum terhubung
-
-            </span>
-
+            <a class="warning-badge" href="https://www.bmkg.go.id/alerts/nowcast/id" target="_blank" rel="noopener noreferrer">Buka peringatan BMKG ↗</a>
         </section>
 
         <div class="main-grid">
@@ -1558,76 +1519,83 @@
 
                             <span class="status-dot"></span>
 
-                            Menunggu data
+                            {{ ($weatherForecast['data_type'] ?? null) === 'actual' ? 'BMKG + sumber data demo terpisah' : (($weatherForecast['data_type'] ?? null) === 'simulation' ? 'Mode Demo' : 'Sebagian data belum tersedia') }}
 
                         </span>
 
                     </div>
 
                     <div class="metrics-grid">
-
-                        <article class="metric-card">
-
-                            <div class="metric-top">
-
-                                <div class="metric-icon">🌦️</div>
-
-                            </div>
-
-                            <div class="metric-label">Informasi Cuaca</div>
-
-                            <div class="metric-value">Belum tersedia</div>
-
-                            <p class="metric-note">
-
-                                Menunggu integrasi sumber cuaca.
-
-                            </p>
-
+                        <article class="metric-card weather-card">
+                            <div class="metric-label">Prakiraan cuaca · {{ $weatherForecast['location'] ?? 'Wilayah belum tersedia' }}</div>
+                            @if (($weatherForecast['data_type'] ?? 'unavailable') === 'actual' && is_array($weatherForecast['current'] ?? null))
+                                @if (is_numeric($weatherForecast['current']['temperature'] ?? null))
+                                    <div class="metric-value weather-value">{{ number_format($weatherForecast['current']['temperature'], 0) }}°C <span>{{ $weatherForecast['current']['condition'] ?? 'Kondisi belum tersedia' }}</span></div>
+                                @else
+                                    <div class="metric-value">Suhu belum tersedia</div>
+                                @endif
+                                <p class="metric-note">BMKG · prakiraan untuk {{ $weatherForecast['location'] }} · {{ $weatherForecast['current']['local_datetime'] }} waktu setempat</p>
+                                <p class="metric-note">
+                                    @if ($weatherForecast['current']['humidity'] !== null)
+                                        Kelembapan udara {{ $weatherForecast['current']['humidity'] }}%
+                                    @else
+                                        Kelembapan udara belum tersedia
+                                    @endif
+                                    ·
+                                    @if ($weatherForecast['current']['wind_kmh'] !== null)
+                                        Angin {{ $weatherForecast['current']['wind_kmh'] }} km/jam
+                                    @else
+                                        Data angin belum tersedia
+                                    @endif
+                                    · prakiraan wilayah administrasi.
+                                </p>
+                            @elseif (($weatherForecast['data_type'] ?? 'unavailable') === 'simulation')
+                                <div class="metric-value weather-value">{{ $weatherForecast['current']['temperature'] }}°C <span>{{ $weatherForecast['current']['condition'] }}</span></div>
+                                <p class="metric-note">Contoh Data SiagaNow · BMKG gagal diambil: {{ $weatherForecast['message'] }}</p>
+                            @else
+                                <div class="metric-value">Belum tersedia</div>
+                                <p class="metric-note">{{ $weatherForecast['message'] ?? 'Prakiraan BMKG belum tersedia.' }}</p>
+                            @endif
                         </article>
 
                         <article class="metric-card">
-
-                            <div class="metric-top">
-
-                                <div class="metric-icon">🌱</div>
-
-                            </div>
-
-                            <div class="metric-label">Kelembapan Tanah</div>
-
+                            <div class="metric-label">Kelembapan tanah</div>
                             <div class="metric-value">Belum tersedia</div>
-
-                            <p class="metric-note">
-
-                                Menunggu integrasi sumber data.
-
-                            </p>
-
+                            <p class="metric-note">Feed BMKG yang digunakan menyediakan kelembapan udara, bukan pengukuran tanah. Kami belum memiliki sensor tanah terverifikasi.</p>
                         </article>
 
                         <article class="metric-card">
-
-                            <div class="metric-top">
-
-                                <div class="metric-icon">📊</div>
-
-                            </div>
-
-                            <div class="metric-label">Statistik Bencana</div>
-
-                            <div class="metric-value">Belum tersedia</div>
-
-                            <p class="metric-note">
-
-                                Data kejadian belum terhubung.
-
-                            </p>
-
+                            <div class="metric-label">Statistik bencana</div>
+                            @if ($demoMode)
+                                <div class="metric-value">{{ number_format($demoStatistics['events']) }} kejadian contoh</div>
+                                <p class="metric-note">{{ number_format($demoStatistics['affected_people']) }} orang · angka latihan, bukan rekap BNPB aktual.</p>
+                            @else
+                                <div class="metric-value">Belum tersedia</div>
+                                <p class="metric-note">Dataset historis BNPB belum disinkronkan. Data tahun berjalan memerlukan verifikasi tersendiri.</p>
+                            @endif
+                            <a class="metric-source-link" href="https://data.bnpb.go.id/dataset/data-bencana-indonesia" target="_blank" rel="noopener noreferrer">Buka dataset BNPB ↗</a>
                         </article>
-
                     </div>
-
+                    @if (($weatherForecast['data_type'] ?? null) === 'actual' && count($weatherForecast['forecasts'] ?? []) > 0)
+                        <div class="forecast-strip" aria-label="Prakiraan BMKG per tiga jam">
+                            <div class="forecast-strip-heading">
+                                <h3>Prakiraan berikutnya</h3>
+                                <a href="{{ route('api.weather-forecast') }}">Data dan waktu pembaruan</a>
+                            </div>
+                            <div class="forecast-periods">
+                                @foreach (array_slice($weatherForecast['forecasts'], 0, 6) as $period)
+                                    <article class="forecast-period">
+                                        <time>{{ \Illuminate\Support\Carbon::parse($period['local_datetime'], 'Asia/Jakarta')->locale('id')->translatedFormat('D H:i') }}</time>
+                                        <strong>{{ number_format($period['temperature'], 0) }}°</strong>
+                                        <span>{{ $period['condition'] }}</span>
+                                    </article>
+                                @endforeach
+                            </div>
+                            <p class="metric-note">{{ $weatherForecast['attribution'] }} Waktu analisis: {{ $weatherForecast['updated_at'] }} UTC. Kondisi setempat dapat berbeda dari prakiraan kelurahan.</p>
+                        </div>
+                    @elseif (($weatherForecast['data_type'] ?? null) !== 'actual')
+                        <p class="metric-note forecast-unavailable">Prakiraan per jam tidak tersedia. Nilai contoh tidak diperluas menjadi jadwal palsu.</p>
+                    @endif
                 </section>
 
                 <!-- PRATINJAU PETA -->
@@ -1718,7 +1686,7 @@
 
                             <div class="feature-row">
 
-                                <div class="feature-icon">🏠</div>
+                                <div class="feature-icon">@include('partials.siaga-icon', ['name' => 'home'])</div>
 
                                 <div>
 
@@ -1746,7 +1714,7 @@
 
                             <div class="feature-row">
 
-                                <div class="feature-icon">🗺️</div>
+                                <div class="feature-icon">@include('partials.siaga-icon', ['name' => 'map'])</div>
 
                                 <div>
 
@@ -1774,7 +1742,7 @@
 
                             <div class="feature-row">
 
-                                <div class="feature-icon">📝</div>
+                                <div class="feature-icon">@include('partials.siaga-icon', ['name' => 'report'])</div>
 
                                 <div>
 
@@ -1830,7 +1798,7 @@
 
                         <article class="news-item">
 
-                            <div class="news-thumbnail">🌧️</div>
+                            <div class="news-thumbnail">@include('partials.siaga-icon', ['name' => 'rain', 'size' => 26])</div>
 
                             <div>
 
@@ -1842,9 +1810,7 @@
 
                                 <p class="news-description">
 
-                                    Materi edukasi akan tersedia setelah konten
-
-                                    terverifikasi dimasukkan ke sistem.
+                                    Materi edukasi, bukan laporan kejadian terkini. Buka panduan kesiapsiagaan untuk langkah praktis menghadapi banjir.
 
                                 </p>
 
@@ -1854,7 +1820,7 @@
 
                         <article class="news-item">
 
-                            <div class="news-thumbnail">⛰️</div>
+                            <div class="news-thumbnail">@include('partials.siaga-icon', ['name' => 'mountain', 'size' => 26])</div>
 
                             <div>
 
@@ -1866,9 +1832,7 @@
 
                                 <p class="news-description">
 
-                                    Materi mitigasi dan informasi kebencanaan
-
-                                    belum terhubung ke sumber berita.
+                                    Pelajari tanda awal dan langkah aman. Berita kejadian terbaru belum tersinkronisasi di SiagaNow.
 
                                 </p>
 
@@ -1877,6 +1841,8 @@
                         </article>
 
                     </div>
+
+                    <p class="news-source-note">Untuk kabar terbaru, kunjungi kanal <a href="https://bpbd.sumbarprov.go.id/publikasi/berita" target="_blank" rel="noopener noreferrer">BPBD Sumatera Barat ↗</a> atau <a href="https://bnpb.go.id/berita" target="_blank" rel="noopener noreferrer">BNPB ↗</a>. Feed berita belum terintegrasi.</p>
 
                 </section>
 
@@ -1914,7 +1880,7 @@
 
                         <div class="feature-row">
 
-                            <div class="feature-icon">🌦️</div>
+                            <div class="feature-icon">@include('partials.siaga-icon', ['name' => 'cloud'])</div>
 
                             <div>
 
@@ -1922,7 +1888,13 @@
 
                                 <p class="feature-description">
 
-                                    Belum terhubung ke API cuaca.
+                                    @if (($weatherForecast['data_type'] ?? 'unavailable') === 'actual')
+                                        Prakiraan BMKG untuk {{ $weatherForecast['location'] }} tersedia; ini bukan pengukuran alamat rumah.
+                                    @elseif (($weatherForecast['data_type'] ?? 'unavailable') === 'simulation')
+                                        Prakiraan gagal diambil. Nilai contoh diberi label simulasi.
+                                    @else
+                                        Prakiraan BMKG belum tersedia.
+                                    @endif
 
                                 </p>
 
@@ -1932,7 +1904,7 @@
 
                         <div class="feature-row">
 
-                            <div class="feature-icon">⚠️</div>
+                            <div class="feature-icon">@include('partials.siaga-icon', ['name' => 'warning'])</div>
 
                             <div>
 
@@ -1940,7 +1912,11 @@
 
                                 <p class="feature-description">
 
-                                    Menunggu sumber peringatan resmi.
+                                    @if ($demoMode)
+                                        Banner di halaman ini hanya contoh, bukan peringatan aktif.
+                                    @else
+                                        Menunggu sumber peringatan resmi.
+                                    @endif
 
                                 </p>
 
@@ -1950,7 +1926,7 @@
 
                         <div class="feature-row">
 
-                            <div class="feature-icon">🏠</div>
+                            <div class="feature-icon">@include('partials.siaga-icon', ['name' => 'shelter'])</div>
 
                             <div>
 
@@ -1958,7 +1934,11 @@
 
                                 <p class="feature-description">
 
-                                    Data lokasi belum tersedia.
+                                    @if ($demoMode)
+                                        Contoh titik tersedia di peta dan ditandai sebagai simulasi.
+                                    @else
+                                        Data lokasi belum tersedia.
+                                    @endif
 
                                 </p>
 
@@ -1996,19 +1976,21 @@
 
                     <div class="rounded-xl border border-dashed border-emerald-200 bg-emerald-50 p-5 text-center">
 
-                        <div class="text-3xl">🏠</div>
+                        <div class="text-3xl">@include('partials.siaga-icon', ['name' => 'shelter', 'size' => 30])</div>
 
                         <h3 class="mt-3 text-sm font-extrabold text-emerald-900">
 
-                            Data Shelter Belum Tersedia
+                            {{ $demoMode ? 'Lokasi Contoh Tersedia' : 'Data Shelter Belum Tersedia' }}
 
                         </h3>
 
                         <p class="mt-2 text-xs leading-6 text-emerald-800">
 
-                            Daftar shelter akan ditampilkan setelah
-
-                            sumber data dan koordinatnya diverifikasi.
+                            @if ($demoMode)
+                                Data Simulasi untuk demonstrasi. Titik ini bukan tempat evakuasi resmi atau terverifikasi.
+                            @else
+                                Daftar shelter akan ditampilkan setelah sumber data dan koordinatnya diverifikasi.
+                            @endif
 
                         </p>
 
@@ -2048,7 +2030,7 @@
 
                     <div class="rounded-xl bg-emerald-50 p-5 text-center">
 
-                        <div class="text-3xl">🤝</div>
+                        <div class="text-3xl">@include('partials.siaga-icon', ['name' => 'people', 'size' => 30])</div>
 
                         <h3 class="mt-3 text-sm font-extrabold text-emerald-900">
 

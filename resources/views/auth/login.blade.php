@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login | SiagaNow</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+@vite(['resources/css/app.css'])
+<link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
 </head>
 <body class="min-h-screen bg-emerald-50 text-emerald-950">
 <div class="fixed inset-0 -z-0">

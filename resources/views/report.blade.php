@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report / Pelaporan Bencana | SiagaNow</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
           integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 
@@ -107,6 +106,8 @@
             .navlink { padding: 9px 10px; font-size: 13px; }
         }
     </style>
+@vite(['resources/css/app.css'])
+<link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
 </head>
 <body class="min-h-screen">
 <header class="mx-auto w-full max-w-[1440px] px-4 pt-5 sm:px-6">
@@ -135,11 +136,11 @@
                 <div class="sn-other-panel" id="sn-other-panel" data-sn-other-panel hidden>
                     <h2 class="sn-other-panel-heading">Informasi &amp; Kesiapsiagaan Bencana</h2>
                     <div class="sn-other-grid">
-                        <a href="{{ route('informasi-banjir') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">≋</span><span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Lihat Informasi</span></span></a>
-                        <a href="{{ route('informasi-longsor') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">⌁</span><span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span></a>
-                        <a href="{{ route('statistik-kejadian') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">▥</span><span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Statistik</span></span></a>
-                        <a href="{{ route('panduan-kesiapsiagaan') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">☷</span><span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span></a>
-                        <a href="{{ route('berita-kebencanaan') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">▤</span><span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita kebencanaan.</span><span class="sn-other-tag">Lihat Berita</span></span></a>
+                        <a href="{{ route('informasi-banjir') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'water', 'size' => 20])</span><span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Lihat Informasi</span></span></a>
+                        <a href="{{ route('informasi-longsor') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'mountain', 'size' => 20])</span><span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span></a>
+                        <a href="{{ route('statistik-kejadian') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'list', 'size' => 20])</span><span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Statistik</span></span></a>
+                        <a href="{{ route('panduan-kesiapsiagaan') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'shield', 'size' => 20])</span><span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span></a>
+                        <a href="{{ route('berita-kebencanaan') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'info', 'size' => 20])</span><span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita kebencanaan.</span><span class="sn-other-tag">Lihat Berita</span></span></a>
                     </div>
                     <p class="sn-other-footer">Pilih salah satu menu untuk membuka halaman informasi terkait kebencanaan.</p>
                 </div>
@@ -167,7 +168,8 @@
 
     <div class="grid items-start gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(340px,.9fr)]">
         <section class="panel overflow-hidden">
-            <form id="report-form" class="p-4 sm:p-6" novalidate>
+            <form id="report-form" class="p-4 sm:p-6" action="{{ route('report.store') }}" method="POST" enctype="multipart/form-data" novalidate>
+                @csrf
                 <div class="mb-5">
                     <label class="section-label" for="title">Judul & lokasi kejadian <span class="text-red-600">*</span></label>
                     <input class="field" id="title" name="title" maxlength="140" required placeholder="Contoh: Banjir di Kecamatan Koto Tangah">
@@ -248,16 +250,16 @@
                     </label>
                     <input class="sr-only" id="evidence" name="evidence[]" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" multiple>
                     <div id="file-list" class="mt-3 flex flex-wrap gap-2"></div>
-                    <p id="file-status" class="mt-2 text-xs muted" role="status" aria-live="polite">Lampiran hanya dipratinjau di browser sampai backend penyimpanan tersedia.</p>
+                    <p id="file-status" class="mt-2 text-xs muted" role="status" aria-live="polite">Lampiran akan diunggah secara privat saat formulir dikirim.</p>
                 </div>
 
                 <div id="form-message" class="mb-4 hidden rounded-xl border px-4 py-3 text-sm" role="status" aria-live="polite"></div>
 
                 <div class="flex flex-wrap items-center justify-between gap-3 border-t border-emerald-100 pt-5">
                     <button type="reset" id="cancel-report" class="btn btn-secondary min-w-28">Batal</button>
-                    <button type="submit" class="btn min-w-40">Periksa Laporan</button>
+                    <button type="submit" id="submit-report" class="btn min-w-40">Kirim Laporan</button>
                 </div>
-                <p class="mt-3 text-xs leading-5 muted">Catatan: halaman ini belum mengirim atau menyimpan laporan. Integrasi route, database, dan penyimpanan lampiran perlu ditambahkan terlebih dahulu.</p>
+                <p class="mt-3 text-xs leading-5 muted">Laporan akan tersimpan dengan status <strong>Menunggu pemeriksaan</strong>. Unggahan disimpan secara privat.</p>
             </form>
         </section>
 
@@ -265,13 +267,13 @@
             <section class="panel overflow-hidden">
                 <div class="flex items-center justify-between gap-3 border-b border-emerald-100 px-5 py-4">
                     <div><h2 class="text-lg font-black text-emerald-900">Lihat Status</h2><p class="mt-1 text-xs muted">Daftar laporan yang tersedia</p></div>
-                    <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800">Belum terhubung</span>
+                    <a href="{{ route('report.status') }}" class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800">Lihat laporan saya</a>
                 </div>
                 <div class="p-5">
                     <div class="grid justify-items-center gap-2 rounded-xl border border-dashed border-emerald-200 bg-emerald-50/60 px-4 py-8 text-center">
                         <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#397c68" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg>
-                        <h3 class="font-extrabold text-emerald-900">Belum ada daftar laporan</h3>
-                        <p class="max-w-xs text-sm leading-6 muted">Daftar dan status laporan akan ditampilkan setelah data laporan terhubung. Tidak ada laporan contoh yang ditampilkan sebagai data nyata.</p>
+                        <h3 class="font-extrabold text-emerald-900">Status laporan tersimpan</h3>
+                        <p class="max-w-xs text-sm leading-6 muted">Lihat laporan yang dikirim dari akun ini, termasuk status pemeriksaannya.</p>
                     </div>
                 </div>
             </section>
@@ -412,8 +414,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         fileStatus.classList.remove('text-red-700');
         fileStatus.textContent = files.length
-            ? files.length + ' file dipilih. File hanya dipratinjau di browser, belum diunggah ke server.'
-            : 'Lampiran hanya dipratinjau di browser sampai backend penyimpanan tersedia.';
+            ? files.length + ' file dipilih. Lampiran akan diunggah secara privat saat formulir dikirim.'
+            : 'Lampiran akan diunggah secara privat saat formulir dikirim.';
         files.forEach(function (file) {
             const item = document.createElement('div');
             item.className = 'flex max-w-full items-center gap-2 rounded-lg border border-emerald-100 bg-white p-2 text-xs';
@@ -453,7 +455,32 @@ document.addEventListener('DOMContentLoaded', function () {
             showMessage('Jumlah korban harus berupa bilangan bulat nol atau lebih.', 'error');
             return;
         }
-        showMessage('Pemeriksaan formulir berhasil. Laporan belum dikirim atau disimpan karena backend pelaporan SiagaNow belum dihubungkan.', 'success');
+        const submitButton = document.getElementById('submit-report');
+        submitButton.disabled = true;
+        submitButton.textContent = 'Mengirim…';
+        showMessage('Mengirim laporan dan lampiran secara aman…', 'info');
+
+        fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+            },
+            body: new FormData(form)
+        }).then(async function (response) {
+            const payload = await response.json().catch(function () { return {}; });
+            if (!response.ok) {
+                const validationMessages = payload.errors ? Object.values(payload.errors).flat() : [];
+                throw new Error(validationMessages.join(' ') || payload.message || 'Laporan belum berhasil dikirim.');
+            }
+            showMessage((payload.message || 'Laporan berhasil disimpan.') + ' Nomor laporan: #' + payload.data.id + '.', 'success');
+            window.setTimeout(function () { window.location.assign(payload.data.status_url); }, 1800);
+        }).catch(function (error) {
+            showMessage(error.message || 'Laporan gagal dikirim. Periksa koneksi lalu coba lagi.', 'error');
+        }).finally(function () {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Kirim Laporan';
+        });
     });
 
     form.addEventListener('reset', function () {
@@ -471,7 +498,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 button.setAttribute('aria-pressed', selected ? 'true' : 'false');
             });
             fileList.replaceChildren();
-            fileStatus.textContent = 'Lampiran hanya dipratinjau di browser sampai backend penyimpanan tersedia.';
+            fileStatus.textContent = 'Lampiran akan diunggah secara privat saat formulir dikirim.';
             fileStatus.classList.remove('text-red-700');
             descriptionCount.textContent = '0/3000';
             message.classList.add('hidden');

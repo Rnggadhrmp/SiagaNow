@@ -870,6 +870,8 @@ a.sn-other-item:hover{background:#edf8f1;transform:translateY(-1px)}
 
 
 
+@vite(['resources/css/app.css'])
+<link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
 </head>
 
 
@@ -968,7 +970,7 @@ Other
 
 <a href="{{ route('informasi-banjir') }}" class="sn-other-item">
 
-<span class="sn-other-icon" aria-hidden="true">≋</span>
+<span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'water', 'size' => 20])</span>
 
 <span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Lihat Informasi</span></span>
 
@@ -976,19 +978,19 @@ Other
 
 
 
-<a href="{{ route('informasi-longsor') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">⌁</span><span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span></a>
+<a href="{{ route('informasi-longsor') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'mountain', 'size' => 20])</span><span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span></a>
 
 
 
-<a href="{{ route('statistik-kejadian') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">▥</span><span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Statistik</span></span></a>
+<a href="{{ route('statistik-kejadian') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'list', 'size' => 20])</span><span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Statistik</span></span></a>
 
 
 
-<div class="sn-other-item sn-other-current" aria-current="page"><span class="sn-other-icon" aria-hidden="true">☷</span><span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Sedang dibuka</span></span></div>
+<div class="sn-other-item sn-other-current" aria-current="page"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'shield', 'size' => 20])</span><span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Sedang dibuka</span></span></div>
 
 
 
-<a href="{{ route('berita-kebencanaan') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">▤</span><span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita setelah sumber terverifikasi ditentukan.</span><span class="sn-other-tag">Lihat Berita</span></span></a>
+<a href="{{ route('berita-kebencanaan') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'info', 'size' => 20])</span><span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita setelah sumber terverifikasi ditentukan.</span><span class="sn-other-tag">Lihat Berita</span></span></a>
 
 
 
@@ -1104,7 +1106,7 @@ Other
 
     <article class="info-card white">
 
-      <h2 class="card-heading"><span aria-hidden="true">↗</span>Setelah Bencana</h2>
+      <h2 class="card-heading"><span>@include('partials.siaga-icon', ['name' => 'shelter'])</span>Setelah Bencana</h2>
 
       <ul class="plain-list">
 
@@ -1147,6 +1149,13 @@ Other
   </section>
 
 
+
+  <aside class="safety-note">
+    <h2>Kontak darurat terverifikasi</h2>
+    <p>Untuk keadaan darurat di Kota Padang, Pemerintah Kota menyediakan PCC 112 dengan panggilan gratis.</p>
+    <p><a href="tel:112">Telepon PCC 112 · Kota Padang</a> · <a href="https://sigap.padang.go.id/" target="_blank" rel="noopener noreferrer">Info resmi PCC 112</a></p>
+    <p>Kontak ini khusus Kota Padang. Jika berada di daerah lain, hubungi BPBD kabupaten/kota setempat.</p>
+  </aside>
 
   <aside class="safety-note"><strong>Penting:</strong> Panduan ini bersifat umum dan tidak menggantikan peringatan resmi atau arahan petugas. Kondisi di lapangan dapat berbeda; segera evakuasi jika ada ancaman langsung dan ikuti instruksi pihak berwenang.</aside>
 

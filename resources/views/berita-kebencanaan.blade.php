@@ -457,6 +457,8 @@ a.sn-other-item:hover{background:#edf8f1;transform:translateY(-1px)}
 
 </style>
 
+@vite(['resources/css/app.css'])
+<link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
 </head>
 
 <body>
@@ -506,17 +508,17 @@ Other
 <div class="sn-other-grid">
 
 <a href="{{ route('informasi-banjir') }}" class="sn-other-item">
-<span class="sn-other-icon" aria-hidden="true">≋</span>
+<span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'water', 'size' => 20])</span>
 <span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Lihat Informasi</span></span>
 </a>
 
-<a href="{{ route('informasi-longsor') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">⌁</span><span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span></a>
+<a href="{{ route('informasi-longsor') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'mountain', 'size' => 20])</span><span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span></a>
 
-<a href="{{ route('statistik-kejadian') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">▥</span><span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor setelah sumber data tersedia.</span><span class="sn-other-tag">Lihat Statistik</span></span></a>
+<a href="{{ route('statistik-kejadian') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'list', 'size' => 20])</span><span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor setelah sumber data tersedia.</span><span class="sn-other-tag">Lihat Statistik</span></span></a>
 
-<a href="{{ route('panduan-kesiapsiagaan') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">☷</span><span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span></a>
+<a href="{{ route('panduan-kesiapsiagaan') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'shield', 'size' => 20])</span><span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span></a>
 
-<div class="sn-other-item sn-other-current" aria-current="page"><span class="sn-other-icon" aria-hidden="true">▤</span><span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita setelah sumber terverifikasi ditentukan.</span><span class="sn-other-tag">Sedang dibuka</span></span></div>
+<div class="sn-other-item sn-other-current" aria-current="page"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'info', 'size' => 20])</span><span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita setelah sumber terverifikasi ditentukan.</span><span class="sn-other-tag">Sedang dibuka</span></span></div>
 
 </div>
 
@@ -549,79 +551,33 @@ Other
 <main class="content">
 <section class="hero-card news-page" aria-labelledby="page-title">
   <h1 class="news-page-title" id="page-title">Semua Berita</h1>
-  <p class="news-demo-note"><strong>Catatan pengembangan:</strong> daftar di bawah mengikuti contoh pada mockup. Judul, tanggal, lokasi, deskripsi, dan gambar masih berupa data contoh yang perlu diverifikasi dan diganti dengan data berita bersumber jelas sebelum dipublikasikan.</p>
+  <p class="news-demo-note"><strong>Feed berita belum terhubung.</strong> SiagaNow tidak menampilkan kartu kejadian contoh sebagai berita aktual. Buka kanal resmi BNPB atau BPBD Sumatera Barat untuk pembaruan terkini.</p>
 
-  <div class="news-list" aria-label="Daftar berita kebencanaan">
-    <article class="news-row">
-      <img class="news-image" src="https://commons.wikimedia.org/wiki/Special:FilePath/Flooding_in_Indonesia.jpg" alt="Ilustrasi dampak banjir di kawasan permukiman" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1547683905-f686c9934c2d?auto=format&fit=crop&w=900&q=80';">
+  <div class="news-list" aria-label="Sumber berita resmi">
+    <article class="news-row source-row">
       <div class="news-detail">
         <div class="news-copy">
-          <h2 class="news-title">Banjir bandang landa Kota Padang, Sumatera Barat</h2>
-          <p class="news-description">Contoh ringkasan berita banjir di Kota Padang. Uraian kejadian dan dampaknya perlu disesuaikan dengan laporan resmi atau berita yang sudah diverifikasi.</p>
-          <div class="news-meta">
-            <span class="news-meta-item"><span class="news-meta-icon" aria-hidden="true">▦</span><span>5 Sep 2026</span></span>
-            <span class="news-meta-item"><span class="news-meta-icon" aria-hidden="true">●</span><span>Padang, Sumatera Barat</span></span>
-          </div>
+          <p class="source-kicker">BPBD Provinsi Sumatera Barat</p>
+          <h2 class="news-title">Publikasi dan informasi wilayah Sumatera Barat</h2>
+          <p class="news-description">Kanal resmi BPBD Sumbar. Periksa tanggal publikasi dan wilayah pada setiap berita sebelum mengambil tindakan.</p>
+          <div class="news-meta"><span class="news-meta-item">Sumber pemerintah daerah · tautan eksternal</span></div>
         </div>
-        <span class="news-arrow" aria-hidden="true">›</span>
+        <a class="news-arrow" href="https://bpbd.sumbarprov.go.id/publikasi/berita" target="_blank" rel="noopener noreferrer" aria-label="Buka berita BPBD Sumatera Barat">↗</a>
       </div>
     </article>
-
-    <article class="news-row">
-      <img class="news-image" src="https://images.unsplash.com/photo-1547683905-f686c9934c2d?auto=format&fit=crop&w=900&q=80" alt="Ilustrasi banjir yang berdampak pada permukiman" loading="lazy">
+    <article class="news-row source-row">
       <div class="news-detail">
         <div class="news-copy">
-          <h2 class="news-title">Banjir bandang landa Kota Solok, Sumatera Barat</h2>
-          <p class="news-description">Contoh ringkasan berita banjir di Kota Solok. Informasi wilayah terdampak, kerusakan, dan penanganan harus mengacu pada sumber yang dapat diperiksa.</p>
-          <div class="news-meta">
-            <span class="news-meta-item"><span class="news-meta-icon" aria-hidden="true">▦</span><span>5 Sep 2026</span></span>
-            <span class="news-meta-item"><span class="news-meta-icon" aria-hidden="true">●</span><span>Solok, Sumatera Barat</span></span>
-          </div>
+          <p class="source-kicker">Badan Nasional Penanggulangan Bencana</p>
+          <h2 class="news-title">Indeks berita dan perkembangan penanganan</h2>
+          <p class="news-description">Kanal berita BNPB nasional. Artikel belum disalin ke SiagaNow karena belum tersedia feed terstruktur yang terverifikasi untuk sinkronisasi.</p>
+          <div class="news-meta"><span class="news-meta-item">Sumber resmi BNPB · tautan eksternal</span></div>
         </div>
-        <span class="news-arrow" aria-hidden="true">›</span>
-      </div>
-    </article>
-
-    <article class="news-row">
-      <img class="news-image" src="https://commons.wikimedia.org/wiki/Special:FilePath/Nganjuk_landslide.jpg" alt="Ilustrasi kejadian tanah longsor" loading="lazy">
-      <div class="news-detail">
-        <div class="news-copy">
-          <h2 class="news-title">Banjir bandang landa Kota Sawahlunto, Sumatera Barat</h2>
-          <p class="news-description">Contoh ringkasan berita kebencanaan untuk wilayah Sawahlunto. Judul dan isi berita ini bukan laporan terverifikasi dan perlu diganti setelah sumber ditetapkan.</p>
-          <div class="news-meta">
-            <span class="news-meta-item"><span class="news-meta-icon" aria-hidden="true">▦</span><span>5 Sep 2026</span></span>
-            <span class="news-meta-item"><span class="news-meta-icon" aria-hidden="true">●</span><span>Sawahlunto, Sumatera Barat</span></span>
-          </div>
-        </div>
-        <span class="news-arrow" aria-hidden="true">›</span>
-      </div>
-    </article>
-
-    <article class="news-row">
-      <img class="news-image" src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=900&q=80" alt="Ilustrasi aliran air di lingkungan alam" loading="lazy">
-      <div class="news-detail">
-        <div class="news-copy">
-          <h2 class="news-title">Banjir bandang landa Kabupaten Sijunjung, Sumatera Barat</h2>
-          <p class="news-description">Contoh ringkasan berita untuk Kabupaten Sijunjung. Detail kejadian dan informasi penanganan belum diisi karena masih menunggu sumber berita yang dapat diverifikasi.</p>
-          <div class="news-meta">
-            <span class="news-meta-item"><span class="news-meta-icon" aria-hidden="true">▦</span><span>5 Sep 2026</span></span>
-            <span class="news-meta-item"><span class="news-meta-icon" aria-hidden="true">●</span><span>Sijunjung, Sumatera Barat</span></span>
-          </div>
-        </div>
-        <span class="news-arrow" aria-hidden="true">›</span>
+        <a class="news-arrow" href="https://bnpb.go.id/berita" target="_blank" rel="noopener noreferrer" aria-label="Buka berita BNPB">↗</a>
       </div>
     </article>
   </div>
-
-  <nav class="news-pagination" aria-label="Navigasi halaman berita">
-    <button class="news-page-button" type="button" aria-label="Halaman sebelumnya" disabled>‹</button>
-    <button class="news-page-button active" type="button" aria-current="page">1</button>
-    <button class="news-page-button" type="button" disabled aria-label="Halaman 2 belum tersedia">2</button>
-    <button class="news-page-button" type="button" disabled aria-label="Halaman 3 belum tersedia">3</button>
-    <span class="news-page-ellipsis" aria-hidden="true">······</span>
-    <button class="news-page-button" type="button" disabled aria-label="Halaman 10 belum tersedia">10</button>
-    <button class="news-page-button" type="button" aria-label="Halaman berikutnya" disabled>›</button>
-  </nav>
+  <p class="news-source-note">Data kejadian historis BNPB tersedia pada <a href="https://data.bnpb.go.id/dataset/data-bencana-indonesia" target="_blank" rel="noopener noreferrer">Portal Satu Data Bencana</a>. Rekap pada dataset tersebut sampai 2024 dan tidak digunakan sebagai laporan kejadian terkini.</p>
 </section>
 </main>
 

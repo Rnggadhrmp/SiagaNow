@@ -11,7 +11,6 @@
 
     <title>Cek Risiko Rumah | SiagaNow</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="stylesheet"
 
@@ -391,6 +390,8 @@
 
     </style>
 
+@vite(['resources/css/app.css'])
+<link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
 </head>
 
 <body class="min-h-screen"
@@ -484,27 +485,27 @@
                     <div class="sn-other-grid">
 
                         <a class="sn-other-item" href="{{ url('/informasi-banjir') }}">
-                                <span class="sn-other-icon" aria-hidden="true">≋</span>
+                                <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'water', 'size' => 20])</span>
                                 <span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Lihat Informasi</span></span>
                             </a>
 
                         <a class="sn-other-item" href="{{ url('/informasi-longsor') }}">
-                                <span class="sn-other-icon" aria-hidden="true">⌁</span>
+                                <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'mountain', 'size' => 20])</span>
                                 <span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span>
                             </a>
 
                         <a class="sn-other-item" href="{{ url('/statistik-kejadian') }}">
-                            <span class="sn-other-icon" aria-hidden="true">▥</span>
+                            <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'list', 'size' => 20])</span>
                             <span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan statistik kejadian banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Statistik</span></span>
                         </a>
 
                         <a class="sn-other-item" href="{{ url('/panduan-kesiapsiagaan') }}">
-                                <span class="sn-other-icon" aria-hidden="true">☷</span>
+                                <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'shield', 'size' => 20])</span>
                                 <span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span>
                             </a>
 
                         <a class="sn-other-item" href="{{ url('/berita-kebencanaan') }}">
-                            <span class="sn-other-icon" aria-hidden="true">▤</span>
+                            <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'info', 'size' => 20])</span>
                             <span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita kejadian bencana.</span><span class="sn-other-tag">Lihat Berita</span></span>
                         </a>
 
@@ -723,7 +724,7 @@
             <section class="rounded-[21px] border border-red-200 bg-red-50 p-5 sm:p-6">
 
                 <div class="flex items-start gap-3">
-                    <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-red-100 text-xl" aria-hidden="true">⚠️</span>
+                    <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-red-100 text-xl">@include('partials.siaga-icon', ['name' => 'warning'])</span>
                     <div>
                         <h2 class="text-lg font-extrabold text-red-900">Peringatan Cuaca BMKG</h2>
                         <p id="warning-heading-status" class="mt-1 text-sm leading-5 text-red-800">
@@ -779,7 +780,7 @@
 
                         <div class="flex items-center gap-3">
 
-                            <span class="text-xl">🌧️</span>
+                            <span class="text-xl">@include('partials.siaga-icon', ['name' => 'rain'])</span>
 
                             <div>
 
@@ -805,7 +806,7 @@
 
                         <div class="flex items-center gap-3">
 
-                            <span class="text-xl">⛰️</span>
+                            <span class="text-xl">@include('partials.siaga-icon', ['name' => 'mountain'])</span>
 
                             <div>
 
@@ -831,7 +832,7 @@
 
                         <div class="flex items-center gap-3">
 
-                            <span class="text-xl">🌦️</span>
+                            <span class="text-xl">@include('partials.siaga-icon', ['name' => 'cloud'])</span>
 
                             <div>
 

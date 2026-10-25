@@ -838,6 +838,8 @@ a.sn-other-item:hover{background:#edf8f1;transform:translateY(-1px)}
 
 
 
+@vite(['resources/css/app.css'])
+<link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
 </head>
 
 
@@ -936,7 +938,7 @@ Other
 
 <div class="sn-other-item sn-other-current" aria-current="page">
 
-<span class="sn-other-icon" aria-hidden="true">≋</span>
+<span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'water', 'size' => 20])</span>
 
 <span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Sedang dibuka</span></span>
 
@@ -944,19 +946,19 @@ Other
 
 
 
-<a href="{{ route('informasi-longsor') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">⌁</span><span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span></a>
+<a href="{{ route('informasi-longsor') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'mountain', 'size' => 20])</span><span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span></a>
 
 
 
-<a href="{{ route('statistik-kejadian') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">▥</span><span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Statistik</span></span></a>
+<a href="{{ route('statistik-kejadian') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'list', 'size' => 20])</span><span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Statistik</span></span></a>
 
 
 
-<a href="{{ route('panduan-kesiapsiagaan') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">☷</span><span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span></a>
+<a href="{{ route('panduan-kesiapsiagaan') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'shield', 'size' => 20])</span><span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span></a>
 
 
 
-<a href="{{ route('berita-kebencanaan') }}" class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">▤</span><span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita setelah sumber terverifikasi ditentukan.</span><span class="sn-other-tag">Lihat Berita</span></span></a>
+<a href="{{ route('berita-kebencanaan') }}" class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'info', 'size' => 20])</span><span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita setelah sumber terverifikasi ditentukan.</span><span class="sn-other-tag">Lihat Berita</span></span></a>
 
 
 
@@ -1024,7 +1026,7 @@ Other
 
 
 
-<h1 class="section-title" id="page-title"><span class="title-icon" aria-hidden="true">🌊</span>Mengenal Bencana Banjir</h1>
+<h1 class="section-title" id="page-title"><span class="title-icon">@include('partials.siaga-icon', ['name' => 'water'])</span>Mengenal Bencana Banjir</h1>
 
 
 
@@ -1104,7 +1106,7 @@ Other
 
 
 
-<article class="info-card"><h2 class="card-heading"><span aria-hidden="true">🛟</span>Apa yang harus dilakukan ketika terjadi banjir?</h2><ol class="number-list">
+<article class="info-card"><h2 class="card-heading"><span>@include('partials.siaga-icon', ['name' => 'shelter'])</span>Apa yang harus dilakukan ketika terjadi banjir?</h2><ol class="number-list">
 
 
 
@@ -1132,7 +1134,7 @@ Other
 
 
 
-<article class="info-card white"><h2 class="card-heading"><span aria-hidden="true">🌿</span>Tips Mitigasi Banjir</h2><ol class="number-list">
+<article class="info-card white"><h2 class="card-heading"><span>@include('partials.siaga-icon', ['name' => 'leaf'])</span>Tips Mitigasi Banjir</h2><ol class="number-list">
 
 
 
@@ -1168,7 +1170,7 @@ Other
 
 
 
-<article class="info-card"><h2 class="card-heading"><span aria-hidden="true">📋</span>Pra-Bencana</h2><ol class="number-list">
+<article class="info-card"><h2 class="card-heading"><span>@include('partials.siaga-icon', ['name' => 'list'])</span>Pra-Bencana</h2><ol class="number-list">
 
 
 
@@ -1192,7 +1194,7 @@ Other
 
 
 
-<article class="info-card white"><h2 class="card-heading"><span aria-hidden="true">🏠</span>Setelah Banjir Surut</h2><ol class="number-list">
+<article class="info-card white"><h2 class="card-heading"><span>@include('partials.siaga-icon', ['name' => 'shelter'])</span>Setelah Banjir Surut</h2><ol class="number-list">
 
 
 

@@ -1,21 +1,52 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DisasterReportController;
 use App\Http\Controllers\MapsController;
 use App\Http\Controllers\RiskCheckController;
+use App\Services\BmkgForecastService;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\WeatherWarningController;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (BmkgForecastService $forecastService) {
+    return view('welcome', [
+        'demoMode' => (bool) config('siaganow.demo_mode'),
+        'demoWeather' => config('siaganow.demo_weather'),
+        'demoStatistics' => config('siaganow.demo_statistics'),
+        'weatherForecast' => $forecastService->getForecast(),
+    ]);
 })->name('home');
 
 // Maps dan pencarian shelter
 Route::get('/maps', [MapsController::class, 'index'])
     ->name('maps');
 
-Route::get('/api/shelters', [MapsController::class, 'search'])
-    ->name('shelters.search');
+// Konten edukasi dan katalog donasi bersifat publik menurut BRD.
+Route::view('/informasi-banjir', 'informasi-banjir')->name('informasi-banjir');
+Route::view('/informasi-longsor', 'informasi-longsor')->name('informasi-longsor');
+Route::view('/statistik-kejadian', 'statistik-kejadian')->name('statistik-kejadian');
+Route::view('/panduan-kesiapsiagaan', 'panduan-kesiapsiagaan')->name('panduan-kesiapsiagaan');
+Route::view('/berita-kebencanaan', 'berita-kebencanaan')->name('berita-kebencanaan');
+Route::get('/donate', function () {
+    return view('donate', [
+        'demoMode' => (bool) config('siaganow.demo_mode'),
+        'demoCampaigns' => config('siaganow.demo_campaigns'),
+    ]);
+})->name('donate');
+
+Route::get('/donate/program/{campaign}', function (string $campaign) {
+    abort_unless((bool) config('siaganow.demo_mode'), 404);
+
+    $selectedCampaign = collect(config('siaganow.demo_campaigns'))
+        ->firstWhere('id', $campaign);
+
+    abort_unless(is_array($selectedCampaign), 404);
+
+    return view('donate', [
+        'demoMode' => true,
+        'demoCampaigns' => config('siaganow.demo_campaigns'),
+        'selectedCampaign' => $selectedCampaign,
+    ]);
+})->name('donate.program.show');
 
 // Halaman yang memerlukan login
 Route::middleware('auth')->group(function () {
@@ -29,26 +60,12 @@ Route::middleware('auth')->group(function () {
         return view('report');
     })->name('report');
 
-    Route::get('/donate', function () {
-        return view('donate');
-    })->name('donate');
+    Route::post('/report', [DisasterReportController::class, 'store'])
+        ->name('report.store');
 
+    Route::get('/report/status', [DisasterReportController::class, 'index'])
+        ->name('report.status');
 
-    Route::view('/informasi-banjir', 'informasi-banjir')
-    ->name('informasi-banjir');
-
-    Route::view('/informasi-longsor', 'informasi-longsor')
-    ->name('informasi-longsor');
-
-    Route::view('/statistik-kejadian', 'statistik-kejadian')
-    ->name('statistik-kejadian');
-
-    Route::view('/panduan-kesiapsiagaan', 'panduan-kesiapsiagaan')
-    ->name('panduan-kesiapsiagaan');
-
-    Route::view('/berita-kebencanaan', 'berita-kebencanaan')
-    ->name('berita-kebencanaan');
-    
     // Profil pengguna
     Route::get('/profil', function () {
         return view('profil');
@@ -74,8 +91,3 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
-
-    Route::get('/api/weather-warning', [
-    WeatherWarningController::class,
-    'check',
-])->name('weather-warning.check');

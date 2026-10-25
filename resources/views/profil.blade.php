@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profil | SiagaNow</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --forest: #075b49;
@@ -169,6 +168,8 @@
             .profile-avatar { width: 62px; height: 62px; border-radius: 18px; font-size: 25px; }
         }
     </style>
+@vite(['resources/css/app.css'])
+<link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
 </head>
 <body class="min-h-screen">
     <header class="mx-auto w-full max-w-[1440px] px-4 pt-5 sm:px-6">
@@ -213,11 +214,11 @@
                     <div class="sn-other-panel" id="sn-other-panel" data-sn-other-panel hidden>
                         <h2 class="sn-other-panel-heading">Informasi &amp; Kesiapsiagaan Bencana</h2>
                         <div class="sn-other-grid">
-                            <div class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">≋</span><span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Halaman belum dibuat</span></span></div>
-                            <div class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">⌁</span><span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Halaman belum dibuat</span></span></div>
-                            <div class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">▥</span><span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan statistik setelah sumber data tersedia.</span><span class="sn-other-tag">Menunggu data</span></span></div>
-                            <div class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">☷</span><span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Halaman belum dibuat</span></span></div>
-                            <div class="sn-other-item"><span class="sn-other-icon" aria-hidden="true">▤</span><span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita setelah sumber terverifikasi ditentukan.</span><span class="sn-other-tag">Menunggu sumber data</span></span></div>
+                            <div class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'water', 'size' => 20])</span><span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Halaman belum dibuat</span></span></div>
+                            <div class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'mountain', 'size' => 20])</span><span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Halaman belum dibuat</span></span></div>
+                            <div class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'list', 'size' => 20])</span><span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan statistik setelah sumber data tersedia.</span><span class="sn-other-tag">Menunggu data</span></span></div>
+                            <div class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'shield', 'size' => 20])</span><span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Halaman belum dibuat</span></span></div>
+                            <div class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'info', 'size' => 20])</span><span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita setelah sumber terverifikasi ditentukan.</span><span class="sn-other-tag">Menunggu sumber data</span></span></div>
                         </div>
                         <p class="sn-other-footer">Menu yang diberi label belum dibuat atau menunggu data belum tersedia sebagai fitur aktif.</p>
                     </div>

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maps | SiagaNow</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <link rel="stylesheet"
           href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -240,6 +239,8 @@
             }
         }
     </style>
+@vite(['resources/css/app.css', 'resources/js/maps.js'])
+<link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
 </head>
 
 <body class="min-h-screen text-slate-800"
@@ -290,23 +291,23 @@
                     <h2 class="sn-other-panel-heading">Informasi &amp; Kesiapsiagaan Bencana</h2>
                     <div class="sn-other-grid">
                         <a href="{{ route('informasi-banjir') }}" class="sn-other-item">
-                            <span class="sn-other-icon" aria-hidden="true">≋</span>
+                            <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'water', 'size' => 20])</span>
                             <span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Lihat Informasi</span></span>
                         </a>
                         <a href="{{ route('informasi-longsor') }}" class="sn-other-item">
-                            <span class="sn-other-icon" aria-hidden="true">⌁</span>
+                            <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'mountain', 'size' => 20])</span>
                             <span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span>
                         </a>
                         <a href="{{ route('statistik-kejadian') }}" class="sn-other-item">
-                            <span class="sn-other-icon" aria-hidden="true">▥</span>
+                            <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'list', 'size' => 20])</span>
                             <span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Statistik</span></span>
                         </a>
                         <a href="{{ route('panduan-kesiapsiagaan') }}" class="sn-other-item">
-                            <span class="sn-other-icon" aria-hidden="true">☷</span>
+                            <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'shield', 'size' => 20])</span>
                             <span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span>
                         </a>
                         <a href="{{ route('berita-kebencanaan') }}" class="sn-other-item">
-                            <span class="sn-other-icon" aria-hidden="true">▤</span>
+                            <span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'info', 'size' => 20])</span>
                             <span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Daftar informasi berita banjir dan tanah longsor.</span><span class="sn-other-tag">Lihat Berita</span></span>
                         </a>
                     </div>
@@ -349,7 +350,7 @@
         </div>
 
         <span class="rounded-xl border border-emerald-200 bg-white/80 px-4 py-3 text-sm font-extrabold text-emerald-800">
-            📍 Fokus: Sumatera Barat
+            @include('partials.siaga-icon', ['name' => 'pin', 'size' => 20]) Fokus: Sumatera Barat
         </span>
     </section>
 
@@ -360,7 +361,7 @@
             <div class="flex flex-wrap items-center justify-between gap-3 border-b border-emerald-100 px-5 py-4 sm:px-6">
                 <div>
                     <h2 class="text-lg font-extrabold" style="color:var(--forest)">
-                        Peta Lokasi Zona &amp; Evakuasi
+                        Peta Sumatera Barat &amp; lokasi
                     </h2>
 
                     <p class="mt-1 text-sm text-slate-500">
@@ -368,15 +369,19 @@
                     </p>
                 </div>
 
-                <span class="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800">
-                    Peta interaktif
-                </span>
+                    <span class="rounded-sm bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800">Peta interaktif</span>
             </div>
 
             <div class="relative">
                 <div id="siaganow-map"
                      role="application"
                      aria-label="Peta interaktif Sumatera Barat">
+                </div>
+
+                <div id="map-tile-fallback"
+                     class="pointer-events-none absolute inset-x-4 top-4 z-[500] mx-auto hidden max-w-lg border-l-4 border-amber-600 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-950 shadow-sm"
+                     role="status" aria-live="polite">
+                    Peta dasar belum berhasil dimuat. Periksa koneksi internet; lokasi pada peta tidak dapat dipakai untuk navigasi sampai peta tersedia.
                 </div>
 
                 <div class="map-float">
@@ -394,31 +399,33 @@
                  class="border-t border-emerald-100 bg-white px-5 py-3 text-sm leading-6 text-slate-600"
                  role="status"
                  aria-live="polite">
-                Memuat peta Sumatera Barat…
+                @if ($usingDemoShelters)
+                    Lokasi shelter contoh ditampilkan sebagai simulasi, bukan tempat evakuasi terverifikasi.
+                @elseif (!$databaseAvailable)
+                    Database tidak tersedia. Peta dasar tetap dapat digunakan; lokasi shelter aktual gagal dimuat.
+                @else
+                    Memuat lokasi shelter yang tersedia…
+                @endif
             </div>
 
-            <div class="flex flex-wrap gap-x-5 gap-y-3 border-t border-emerald-100 px-5 py-4 text-xs font-semibold text-slate-600 sm:text-sm">
-                <span class="flex items-center gap-2">
-                    <i class="h-3 w-3 rounded-full bg-emerald-600"></i>
-                    Zona aman (data belum tersedia)
-                </span>
+            @if ($usingDemoShelters)
+                <div class="border-t border-amber-200 bg-amber-50 px-5 py-3 text-xs leading-5 text-amber-900">
+                    <strong>Data Simulasi:</strong> penanda contoh di Padang hanya untuk demonstrasi. Titik ini bukan zona bahaya resmi atau shelter yang dipastikan tersedia.
+                </div>
+            @elseif (!$databaseAvailable)
+                <div class="border-t border-amber-200 bg-amber-50 px-5 py-3 text-xs leading-5 text-amber-900">
+                    Data aktual gagal dimuat dari database. Tidak ada lokasi contoh yang ditampilkan.
+                </div>
+            @endif
 
-                <span class="flex items-center gap-2">
-                    <i class="h-3 w-3 rounded-full bg-red-600"></i>
-                    Zona bahaya (data belum tersedia)
-                </span>
-
-                <span class="flex items-center gap-2">
-                    <i class="h-3 w-3 rounded-full bg-orange-500"></i>
-                    Lokasi terdampak (data belum tersedia)
-                </span>
+            <div class="border-t border-emerald-100 px-5 py-4 text-sm leading-6 text-slate-600">
+                <strong class="text-emerald-900">Lapisan risiko:</strong> belum ditampilkan pada peta SiagaNow. Peta dasar bukan peta bahaya dan penanda contoh tidak menunjukkan kondisi aman.
+                <div class="mt-2 flex flex-wrap gap-x-5 gap-y-2 text-xs">
+                    <a href="https://inarisk.bnpb.go.id" target="_blank" rel="noopener noreferrer">Buka InaRISK BNPB ↗</a>
+                    <a href="https://data.bnpb.go.id/dataset/data-bencana-indonesia" target="_blank" rel="noopener noreferrer">Buka dataset kejadian BNPB ↗</a>
+                </div>
             </div>
 
-            <div class="border-t border-amber-200 bg-amber-50 px-5 py-3 text-xs leading-5 text-amber-900">
-                <strong>Catatan penting:</strong>
-                peta dasar bukan peta risiko. Belum ada poligon zona, titik shelter,
-                atau lokasi terdampak yang ditampilkan karena data terverifikasi belum diintegrasikan.
-            </div>
         </div>
 
         <!-- Panel informasi -->
@@ -428,7 +435,7 @@
             <section class="sn-card p-5 sm:p-6">
                 <div class="flex items-start gap-3">
                     <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-emerald-50 text-xl">
-                        ⌕
+                        @include('partials.siaga-icon', ['name' => 'search'])
                     </span>
 
                     <div>
@@ -466,59 +473,35 @@
                 </p>
             </section>
 
-            <!-- Zona aman -->
+            <!-- Ketersediaan data risiko -->
             <section class="sn-card p-5 sm:p-6">
-                <h2 class="text-lg font-extrabold" style="color:var(--forest)">
-                    Temukan Zona Aman
-                </h2>
-
-                <p class="mt-1 text-sm leading-5 text-slate-500">
-                    Daftar zona A–D sesuai rancangan Figma. Detail wilayah menunggu data resmi.
-                </p>
-
-                <div class="mt-4 space-y-2.5">
-                    @foreach (['A', 'B', 'C', 'D'] as $zona)
-                        <div class="zone-row">
-                            <span class="flex items-center gap-3">
-                                <span class="grid h-9 w-9 place-items-center rounded-lg bg-emerald-50 font-black text-emerald-800">
-                                    {{ $zona }}
-                                </span>
-
-                                <span class="font-bold text-slate-700">
-                                    Zona Aman {{ $zona }}
-                                </span>
-                            </span>
-
-                            <span class="text-right text-xs font-semibold text-slate-500">
-                                Menunggu data
-                            </span>
-                        </div>
-                    @endforeach
-                </div>
+                <h2 class="text-lg font-extrabold" style="color:var(--forest)">Zona aman dan evakuasi</h2>
+                <p class="mt-2 text-sm leading-6 text-slate-600">Klasifikasi zona A–D dan daftar lokasi resmi belum tersedia di basis data SiagaNow. Penanda contoh pada peta tidak dapat digunakan sebagai arahan evakuasi.</p>
+                <a class="mt-3 inline-flex text-sm font-bold text-emerald-900 underline underline-offset-4" href="https://inarisk.bnpb.go.id" target="_blank" rel="noopener noreferrer">Periksa informasi risiko InaRISK ↗</a>
             </section>
 
-            <!-- Zona merah -->
-            <section class="rounded-[20px] border border-red-200 bg-red-50 p-5 sm:p-6">
+            <!-- Data bahaya -->
+            <section class="sn-card p-5 sm:p-6">
                 <div class="flex items-center gap-3">
-                    <span class="grid h-11 w-11 place-items-center rounded-xl bg-red-100 text-xl">
-                        ⚠
+                    <span class="grid h-11 w-11 place-items-center rounded bg-emerald-50 text-xl text-emerald-900">
+                        @include('partials.siaga-icon', ['name' => 'mountain'])
                     </span>
 
                     <div>
-                        <h2 class="text-lg font-extrabold text-red-900">
-                            Daftar Zona Merah
+                        <h2 class="text-lg font-extrabold text-emerald-950">
+                            Data bahaya InaRISK
                         </h2>
 
-                        <p class="text-xs font-semibold text-red-700">
-                            Belum terhubung
+                        <p class="text-xs font-semibold text-slate-600">
+                            Belum diintegrasikan
                         </p>
                     </div>
                 </div>
 
-                <p class="mt-3 text-sm leading-6 text-red-800">
-                    Daftar wilayah berisiko tinggi baru dapat ditampilkan setelah data
-                    kebencanaan resmi tersedia dan diverifikasi.
+                <p class="mt-3 text-sm leading-6 text-slate-600">
+                    Layer resmi tersedia di portal InaRISK. SiagaNow belum menafsirkan nilai raster tersebut menjadi kelas risiko rumah atau zona aman.
                 </p>
+                <a class="mt-3 inline-flex text-sm font-bold text-emerald-900 underline underline-offset-4" href="https://inarisk.bnpb.go.id" target="_blank" rel="noopener noreferrer">Buka InaRISK ↗</a>
             </section>
 
         </aside>
@@ -543,7 +526,7 @@
 
         <a href="{{ url('/risk-check') }}"
            class="sn-btn shrink-0 text-center"
-           style="background:#ea7a17">
+           style="background:var(--sn-forest)">
             Buka Cek Risiko Rumah →
         </a>
     </section>
@@ -554,20 +537,22 @@
     SiagaNow — Kesiapsiagaan Bencana Banjir dan Tanah Longsor
 </footer>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""></script>
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const mapEl = document.getElementById('siaganow-map');
     const statusEl = document.getElementById('map-status');
+    const tileFallback = document.getElementById('map-tile-fallback');
 
     if (!mapEl || !statusEl) return;
 
     if (typeof L === 'undefined') {
         statusEl.textContent =
             'Leaflet gagal dimuat. Periksa koneksi internet dan coba muat ulang halaman.';
+        if (tileFallback) {
+            tileFallback.textContent =
+                'Pustaka peta gagal dimuat dari layanan eksternal. Periksa koneksi internet; peta dan kontrol lokasi belum dapat digunakan.';
+            tileFallback.classList.remove('hidden');
+        }
         return;
     }
 
@@ -577,24 +562,92 @@ document.addEventListener('DOMContentLoaded', function () {
         scrollWheelZoom: true
     }).setView(sumbarCenter, 8);
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    let loadedTiles = 0;
+    let tileErrors = 0;
+    let tileFailureTimer = null;
+    let mapDataStatusMessage = '';
+    const tileLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         minZoom: 5,
         maxZoom: 19,
         attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
     }).addTo(map);
 
+    tileLayer.on('tileload', function () {
+        loadedTiles++;
+        if (tileFallback) tileFallback.classList.add('hidden');
+        if (tileFailureTimer) window.clearTimeout(tileFailureTimer);
+        if (statusEl.dataset.basemapError === 'true' && mapDataStatusMessage) {
+            statusEl.textContent = mapDataStatusMessage;
+            delete statusEl.dataset.basemapError;
+        }
+    });
+
+    tileLayer.on('tileerror', function () {
+        tileErrors++;
+        if (loadedTiles === 0 && tileFallback) tileFallback.classList.remove('hidden');
+        if (loadedTiles === 0) {
+            statusEl.dataset.basemapError = 'true';
+            statusEl.textContent =
+                'Peta dasar OpenStreetMap gagal dimuat. Lokasi dan penanda tidak dapat dipakai untuk menentukan rute evakuasi.';
+        }
+    });
+
+    tileFailureTimer = window.setTimeout(function () {
+        if (loadedTiles === 0 && tileFallback) tileFallback.classList.remove('hidden');
+        if (loadedTiles === 0 && tileErrors === 0) {
+            statusEl.dataset.basemapError = 'true';
+            statusEl.textContent =
+                'Peta dasar OpenStreetMap belum merespons. Periksa koneksi internet; peta belum siap digunakan.';
+        }
+    }, 6000);
+
     let userMarker = null;
     let accuracyCircle = null;
+    const shelters = @js($shelters);
+    const simulatedShelters = {{ $usingDemoShelters ? 'true' : 'false' }};
 
-    statusEl.textContent =
-        'Peta dasar berhasil dimuat. Data zona risiko dan shelter belum terhubung.';
+    shelters.forEach((shelter) => {
+        const lat = Number(shelter.latitude);
+        const lng = Number(shelter.longitude);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+        const marker = L.marker([lat, lng]).addTo(map);
+        const popup = document.createElement('div');
+        const title = document.createElement('strong');
+        title.textContent = shelter.name;
+        popup.appendChild(title);
+        if (simulatedShelters) {
+            const note = document.createElement('p');
+            note.textContent = 'Data Simulasi — bukan shelter resmi';
+            note.className = 'mt-1 text-xs text-amber-800';
+            popup.appendChild(note);
+        } else {
+            const provenance = document.createElement('p');
+            provenance.textContent = (shelter.source || 'Sumber belum dicatat') +
+                (shelter.verified_at ? ' · diverifikasi' : ' · belum diverifikasi');
+            provenance.className = 'mt-1 text-xs text-slate-600';
+            popup.appendChild(provenance);
+        }
+        marker.bindPopup(popup);
+    });
+
+    if (!simulatedShelters && shelters.length === 0) {
+        statusEl.textContent = 'Peta dasar berhasil dimuat. Data zona risiko dan shelter belum tersedia.';
+    } else if (!simulatedShelters) {
+        statusEl.textContent = 'Menampilkan ' + shelters.length +
+            ' lokasi dari database. Periksa sumber dan status verifikasi pada tiap penanda.';
+    } else {
+        statusEl.textContent = 'Menampilkan lokasi contoh sebagai Data Simulasi; bukan shelter resmi atau tujuan evakuasi terverifikasi.';
+    }
+    mapDataStatusMessage = statusEl.textContent;
 
     document.getElementById('reset-map')?.addEventListener('click', function () {
         map.setView(sumbarCenter, 8);
 
-        statusEl.textContent =
-            'Peta kembali difokuskan ke Sumatera Barat. Zona risiko dan shelter belum ditampilkan.';
+        statusEl.textContent = simulatedShelters
+            ? 'Peta difokuskan ke Sumatera Barat. Penanda yang terlihat adalah Data Simulasi, bukan shelter resmi.'
+            : 'Peta difokuskan ke Sumatera Barat. Zona risiko resmi belum tersedia.';
     });
 
     document.getElementById('locate-me')?.addEventListener('click', function () {
@@ -688,7 +741,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const button = document.createElement('button');
             button.type = 'button';
             button.className = 'mt-2 block w-full rounded-lg border border-emerald-100 p-3 text-left';
-            button.textContent = shelter.name + (shelter.address ? ' — ' + shelter.address : '');
+            button.textContent = shelter.name + (shelter.address ? ' — ' + shelter.address : '') +
+                (result.data_type === 'simulation' ? ' · Data Simulasi' : '');
 
             button.addEventListener('click', () => {
                 const lat = Number(shelter.latitude);
@@ -698,12 +752,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 map.setView([lat, lng], 15);
 
-                L.popup()
-                    .setLatLng([lat, lng])
-                    .setContent(
-                        document.createTextNode(shelter.name)
-                    )
-                    .openOn(map);
+                const popupContent = document.createElement('div');
+                const name = document.createElement('strong');
+                name.textContent = shelter.name;
+                popupContent.appendChild(name);
+                if (result.data_type === 'simulation') {
+                    const note = document.createElement('p');
+                    note.textContent = 'Data Simulasi — bukan shelter resmi';
+                    note.className = 'mt-1 text-xs text-amber-800';
+                    popupContent.appendChild(note);
+                } else {
+                    const provenance = document.createElement('p');
+                    provenance.textContent = (shelter.source || 'Sumber belum dicatat') +
+                        (shelter.verified_at ? ' · diverifikasi' : ' · belum diverifikasi');
+                    provenance.className = 'mt-1 text-xs text-slate-600';
+                    popupContent.appendChild(provenance);
+                }
+
+                L.popup().setLatLng([lat, lng]).setContent(popupContent).openOn(map);
             });
 
             shelterStatus.appendChild(button);
