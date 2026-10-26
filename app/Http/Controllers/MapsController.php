@@ -20,6 +20,8 @@ class MapsController extends \App\Http\Controllers\Controller
             $shelters = Shelter::query()
                 ->whereNotNull('latitude')
                 ->whereNotNull('longitude')
+                ->whereBetween('latitude', [-90, 90])
+                ->whereBetween('longitude', [-180, 180])
                 ->get();
             $hazardZones = HazardZone::query()->get();
             $disasterEvents = DisasterEvent::query()
@@ -62,6 +64,8 @@ class MapsController extends \App\Http\Controllers\Controller
             $shelters = Shelter::query()
                 ->whereNotNull('latitude')
                 ->whereNotNull('longitude')
+                ->whereBetween('latitude', [-90, 90])
+                ->whereBetween('longitude', [-180, 180])
                 ->when($query !== '', function ($builder) use ($query) {
                     $builder->where(function ($nested) use ($query) {
                         $nested->where('name', 'like', "%{$query}%")

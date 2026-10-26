@@ -8,7 +8,8 @@
 @vite(['resources/css/app.css'])
 <link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
 </head>
-<body class="min-h-screen bg-emerald-50 text-slate-800">
+<body data-page="report-status" class="min-h-screen bg-emerald-50 text-slate-800">
+    @include('partials.site-navbar')
     <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6">
         <a href="{{ route('report') }}" class="text-sm font-bold text-emerald-800">← Kembali ke formulir laporan</a>
         <header class="mt-5 rounded-3xl bg-white p-6 shadow-sm sm:p-8">

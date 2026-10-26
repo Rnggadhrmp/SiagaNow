@@ -171,66 +171,8 @@
 @vite(['resources/css/app.css'])
 <link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
 </head>
-<body class="min-h-screen">
-    <header class="mx-auto w-full max-w-[1440px] px-4 pt-5 sm:px-6">
-        <div class="sn-header">
-            <a href="{{ route('home') }}" class="flex items-center gap-3 no-underline" aria-label="SiagaNow beranda">
-                <span class="sn-brand-symbol" aria-hidden="true">
-                    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-7h6v7"/></svg>
-                </span>
-                <span>
-                    <span class="block text-[30px] font-black tracking-tight leading-none" style="color:var(--forest)">SiagaNow</span>
-                    <span class="mt-1 block text-sm font-semibold tracking-wide text-emerald-900/60">Siaga Bencana, Selamat Bersama</span>
-                </span>
-            </a>
-
-            <nav class="sn-navigation" aria-label="Navigasi utama">
-                <a class="sn-nav" href="{{ route('home') }}">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m3 10 9-7 9 7M5 9v12h14V9"/></svg>
-                    Home
-                </a>
-                <a class="sn-nav" href="{{ route('maps') }}">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/></svg>
-                    Maps
-                </a>
-                <a class="sn-nav" href="{{ url('/risk-check') }}">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 10 18H2L12 3Z"/><path d="M12 9v5M12 17h.01"/></svg>
-                    Cek Risiko
-                </a>
-                <a class="sn-nav" href="{{ url('/report') }}">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4"/><path d="M4 4c7-4 9 4 16 0v12c-7 4-9-4-16 0"/></svg>
-                    Report
-                </a>
-                <a class="sn-nav" href="{{ url('/donate') }}">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
-                    Donate
-                </a>
-                <div class="sn-other-wrap" data-sn-other>
-                    <button class="sn-nav sn-other-trigger" type="button" aria-expanded="false" aria-controls="sn-other-panel" data-sn-other-trigger>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-                        Other
-                        <svg class="sn-other-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-                    </button>
-                    <div class="sn-other-panel" id="sn-other-panel" data-sn-other-panel hidden>
-                        <h2 class="sn-other-panel-heading">Informasi &amp; Kesiapsiagaan Bencana</h2>
-                        <div class="sn-other-grid">
-                            <div class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'water', 'size' => 20])</span><span><span class="sn-other-title">Informasi Bencana Banjir</span><span class="sn-other-desc">Tanda bahaya dan langkah kesiapsiagaan banjir.</span><span class="sn-other-tag">Halaman belum dibuat</span></span></div>
-                            <div class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'mountain', 'size' => 20])</span><span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Halaman belum dibuat</span></span></div>
-                            <div class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'list', 'size' => 20])</span><span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan statistik setelah sumber data tersedia.</span><span class="sn-other-tag">Menunggu data</span></span></div>
-                            <div class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'shield', 'size' => 20])</span><span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Panduan persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Halaman belum dibuat</span></span></div>
-                            <div class="sn-other-item"><span class="sn-other-icon">@include('partials.siaga-icon', ['name' => 'info', 'size' => 20])</span><span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi berita setelah sumber terverifikasi ditentukan.</span><span class="sn-other-tag">Menunggu sumber data</span></span></div>
-                        </div>
-                        <p class="sn-other-footer">Menu yang diberi label belum dibuat atau menunggu data belum tersedia sebagai fitur aktif.</p>
-                    </div>
-                </div>
-                <a class="sn-nav" href="{{ route('profil') }}" aria-current="page" style="background:var(--forest);border-color:var(--forest);color:#fff">Profil</a>
-                <form action="{{ route('logout') }}" method="POST" class="m-0">
-                    @csrf
-                    <button type="submit" class="sn-nav">Keluar</button>
-                </form>
-            </nav>
-        </div>
-    </header>
+<body data-page="profile" class="min-h-screen">
+    @include('partials.site-navbar')
 
     <main class="mx-auto w-full max-w-[1100px] px-4 py-8 sm:px-6 sm:py-10">
         <div class="mb-6">
@@ -295,6 +237,8 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('[data-sn-other]').forEach(function (wrap) {
+            if (wrap.dataset.snInitialized === 'true') return;
+            wrap.dataset.snInitialized = 'true';
             const trigger = wrap.querySelector('[data-sn-other-trigger]');
             const panel = wrap.querySelector('[data-sn-other-panel]');
             const chevron = wrap.querySelector('.sn-other-chevron');

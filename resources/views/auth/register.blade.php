@@ -1,39 +1,57 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Registrasi | SiagaNow</title>
-@vite(['resources/css/app.css'])
-<link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
+    @vite(['resources/css/app.css'])
+    <link rel="stylesheet" href="{{ asset('css/siaganow-design.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth-pages.css') }}">
 </head>
-<body class="min-h-screen bg-emerald-50 text-emerald-950">
-<div class="fixed inset-0 -z-0">
-    <img src="{{ asset('images/siaganow-bg.png') }}"
-         alt=""
-         class="h-full w-full object-cover">
-    <div class="absolute inset-0 bg-emerald-950/25"></div>
-</div>
+<body class="auth-page auth-page--register" data-page="register">
+<main class="auth-stage auth-register-stage">
+    <div class="auth-register-layout">
+        <section class="auth-register-information" aria-labelledby="register-intro-title">
+            <div class="auth-register-headline">
+                <h1 id="register-intro-title">Satu Akun Untuk Aksi yang lebih cepat.</h1>
+            </div>
 
-<main class="relative z-10 flex min-h-screen items-center justify-center p-5">
-    <section class="grid w-full max-w-5xl overflow-hidden rounded-3xl bg-white/95 shadow-2xl md:grid-cols-5">
-        <div class="flex flex-col justify-center bg-emerald-900 p-8 text-white md:col-span-2">
-            <a href="/" class="text-2xl font-black">Siaga<span class="text-orange-400">Now</span></a>
-            <h1 class="mt-10 text-3xl font-black">Mulai Bersama SiagaNow</h1>
-            <p class="mt-4 text-sm leading-7 text-emerald-100">
-                Buat akun untuk mengakses layanan yang memerlukan autentikasi
-                dan mendukung kesiapsiagaan bencana.
+            <p class="auth-register-description">
+                Pantau informasi banjir dan tanah longsor, temukan lokasi penting di sekitar Anda, dan bantu tingkatkan
+                kesiapsiagaan bencana bersama SiagaNow.
             </p>
-        </div>
 
-        <div class="p-7 md:col-span-3 md:p-10">
-            <h2 class="text-2xl font-extrabold">Buat Akun</h2>
-            <p class="mt-2 text-sm text-slate-500">Lengkapi data diri kamu.</p>
+            <ul class="auth-benefits" aria-label="Manfaat SiagaNow">
+                <li class="auth-benefit">
+                    <img src="{{ asset('images/auth-benefit-home.svg') }}" alt="" aria-hidden="true">
+                    <span>
+                        <strong>Pantauan Personal</strong>
+                        <small>Pantau rumah anda apakah aman atau tidak</small>
+                    </span>
+                </li>
+                <li class="auth-benefit">
+                    <img src="{{ asset('images/auth-benefit-home.svg') }}" alt="" aria-hidden="true">
+                    <span>
+                        <strong>Akses Zona Aman</strong>
+                        <small>Temukan Zona aman dan shelter terdekat</small>
+                    </span>
+                </li>
+                <li class="auth-benefit">
+                    <img src="{{ asset('images/auth-benefit-home.svg') }}" alt="" aria-hidden="true">
+                    <span>
+                        <strong>Terhubung Dengan Komunitas</strong>
+                        <small>Laporkan Kondisi dan dukung respons bersama.</small>
+                    </span>
+                </li>
+            </ul>
+        </section>
+
+        <section class="auth-register-panel" aria-labelledby="register-title">
+            <h1 id="register-title">Buat Akun Baru</h1>
 
             @if ($errors->any())
-                <div class="mt-5 rounded-xl bg-red-50 p-4 text-sm text-red-700">
-                    <ul class="list-inside list-disc space-y-1">
+                <div class="auth-message auth-message--error" role="alert">
+                    <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach
@@ -41,78 +59,70 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('register.store') }}"
-                  class="mt-6 grid gap-4 sm:grid-cols-2">
+            <form method="POST" action="{{ route('register.store') }}" class="auth-register-form">
                 @csrf
 
-                <div>
-                    <label for="name" class="mb-2 block text-sm font-semibold">Nama lengkap</label>
-                    <input id="name" name="name" value="{{ old('name') }}"
-                           required autocomplete="name"
-                           class="w-full rounded-xl border border-emerald-100 px-4 py-3 outline-none focus:border-emerald-700">
+                <div class="auth-register-fields">
+                    <div class="auth-register-field">
+                        <label for="name">Nama :</label>
+                        <input id="name" name="name" value="{{ old('name') }}" required autocomplete="name"
+                               placeholder="Masukan Nama Lengkap">
+                    </div>
+
+                    <div class="auth-register-field">
+                        <label for="phone">Nomor Telepon :</label>
+                        <input id="phone" name="phone" type="tel" value="{{ old('phone') }}" required autocomplete="tel"
+                               placeholder="Ex : 08xxxxxxxxxx">
+                    </div>
+
+                    <div class="auth-register-field auth-register-field--wide">
+                        <label for="email">Email :</label>
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autocomplete="email"
+                               placeholder="Masukan Email Anda">
+                    </div>
+
+                    <div class="auth-register-field auth-register-field--wide auth-address-field">
+                        <label for="address">Wilayah Domisili :</label>
+                        <input id="address" name="address" value="{{ old('address') }}" required autocomplete="street-address"
+                               placeholder="Pilih Wilayah Anda">
+                        <span class="auth-address-chevron" aria-hidden="true"></span>
+                    </div>
+
+                    <div class="auth-register-field auth-register-field--wide">
+                        <label for="password">Password :</label>
+                        <input id="password" name="password" type="password" required minlength="8" autocomplete="new-password"
+                               placeholder="Minimal 8 Karakter">
+                    </div>
+
+                    <div class="auth-register-field auth-register-field--wide">
+                        <label for="password_confirmation">Konfirmasi Password :</label>
+                        <input id="password_confirmation" name="password_confirmation" type="password" required minlength="8"
+                               autocomplete="new-password" placeholder="Masukan Kembali Password">
+                    </div>
                 </div>
 
-                <div>
-                    <label for="phone" class="mb-2 block text-sm font-semibold">Nomor telepon</label>
-                    <input id="phone" name="phone" type="tel" value="{{ old('phone') }}"
-                           required autocomplete="tel"
-                           class="w-full rounded-xl border border-emerald-100 px-4 py-3 outline-none focus:border-emerald-700">
-                </div>
-
-                <div class="sm:col-span-2">
-                    <label for="email" class="mb-2 block text-sm font-semibold">Email</label>
-                    <input id="email" name="email" type="email" value="{{ old('email') }}"
-                           required autocomplete="email"
-                           class="w-full rounded-xl border border-emerald-100 px-4 py-3 outline-none focus:border-emerald-700">
-                </div>
-
-                <div class="sm:col-span-2">
-                    <label for="address" class="mb-2 block text-sm font-semibold">Domisili</label>
-                    <input id="address" name="address" value="{{ old('address') }}"
-                           required autocomplete="street-address"
-                           class="w-full rounded-xl border border-emerald-100 px-4 py-3 outline-none focus:border-emerald-700"
-                           placeholder="Kabupaten/kota, provinsi">
-                </div>
-
-                <div>
-                    <label for="password" class="mb-2 block text-sm font-semibold">Password</label>
-                    <input id="password" name="password" type="password"
-                           required minlength="8" autocomplete="new-password"
-                           class="w-full rounded-xl border border-emerald-100 px-4 py-3 outline-none focus:border-emerald-700">
-                    <p class="mt-1 text-xs text-slate-500">Minimal 8 karakter.</p>
-                </div>
-
-                <div>
-                    <label for="password_confirmation" class="mb-2 block text-sm font-semibold">Konfirmasi password</label>
-                    <input id="password_confirmation" name="password_confirmation"
-                           type="password" required minlength="8" autocomplete="new-password"
-                           class="w-full rounded-xl border border-emerald-100 px-4 py-3 outline-none focus:border-emerald-700">
-                </div>
-
-                <label class="flex items-start gap-2 text-sm leading-6 text-slate-600 sm:col-span-2">
-                    <input type="checkbox" name="terms" value="1" required
-                           class="mt-1 rounded border-emerald-300">
-                    Saya menyetujui ketentuan layanan SiagaNow.
+                <label class="auth-terms" for="terms">
+                    <input id="terms" type="checkbox" name="terms" value="1" required @checked(old('terms'))>
+                    <span>Saya Menyetujui Syarat Layanan Dan Ketentuan Privasi</span>
                 </label>
 
-                <button type="submit"
-                        class="rounded-xl bg-emerald-900 px-4 py-3 font-bold text-white hover:bg-emerald-800 sm:col-span-2">
-                    Daftar Sekarang
-                </button>
+                <button type="submit" class="auth-submit auth-submit--register">Daftar Sekarang</button>
             </form>
 
-            <p class="mt-6 text-center text-sm text-slate-600">
-                Sudah punya akun?
-                <a href="{{ route('login') }}" class="font-bold text-emerald-800 hover:underline">
-                    Masuk
-                </a>
-            </p>
+            <div class="auth-or-divider" aria-hidden="true"><span>Atau Lanjutkan Dengan</span></div>
 
-            <a href="/" class="mt-4 block text-center text-sm text-slate-500 hover:underline">
-                ← Kembali ke beranda
-            </a>
-        </div>
-    </section>
+            <button class="auth-google-button" type="button" disabled aria-label="Google sign-up belum tersedia">
+                <img src="{{ asset('images/auth-google-g.svg') }}" alt="" aria-hidden="true">
+                <span>Google</span>
+                <small>Belum tersedia</small>
+            </button>
+
+            <p class="auth-login-prompt">
+                <span>Sudah Punya Akun?</span>
+                <a href="{{ route('login') }}">Masuk Di Sini</a>
+            </p>
+        </section>
+    </div>
 </main>
 </body>
 </html>

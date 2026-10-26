@@ -4,15 +4,36 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DisasterReportController;
 use App\Http\Controllers\MapsController;
 use App\Http\Controllers\RiskCheckController;
+use App\Models\Shelter;
 use App\Services\BmkgForecastService;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function (BmkgForecastService $forecastService) {
+    try {
+        $featuredShelters = Shelter::query()
+            ->whereNotNull('verified_at')
+            ->whereBetween('latitude', [-90, 90])
+            ->whereBetween('longitude', [-180, 180])
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->latest('verified_at')
+            ->limit(3)
+            ->get(['id', 'name', 'address', 'latitude', 'longitude', 'verified_at']);
+        $shelterDatabaseAvailable = true;
+    } catch (QueryException $exception) {
+        report($exception);
+        $featuredShelters = collect();
+        $shelterDatabaseAvailable = false;
+    }
+
     return view('welcome', [
         'demoMode' => (bool) config('siaganow.demo_mode'),
         'demoWeather' => config('siaganow.demo_weather'),
         'demoStatistics' => config('siaganow.demo_statistics'),
         'weatherForecast' => $forecastService->getForecast(),
+        'featuredShelters' => $featuredShelters,
+        'shelterDatabaseAvailable' => $shelterDatabaseAvailable,
     ]);
 })->name('home');
 
