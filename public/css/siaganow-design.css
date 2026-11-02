@@ -856,3 +856,38 @@ body[data-page="home"] .page-shell { padding-top: 0 !important; }
 @media (max-width: 390px) {
     .sn-site-navigation { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+/* Let long routed pages transition from the portrait landscape into layered forest greens. */
+body[data-page]:not([data-page="home"]):not([data-page="login"]):not([data-page="register"]) {
+    background-color: #063e32 !important;
+    background-image:
+        linear-gradient(to bottom,
+            transparent 0,
+            transparent 94vw,
+            rgba(1, 84, 63, .12) 100vw,
+            rgba(1, 84, 63, .42) 107vw,
+            rgba(1, 84, 63, .34) 112vw,
+            transparent 116vw),
+        radial-gradient(ellipse 138% 340px at 0% 119vw, rgba(35, 99, 78, .34), transparent 76%),
+        radial-gradient(ellipse 126% 440px at 100% 151vw, rgba(6, 62, 50, .38), transparent 78%),
+        radial-gradient(ellipse 150% 520px at 12% 194vw, rgba(35, 99, 78, .24), transparent 82%),
+        linear-gradient(to bottom,
+            transparent 0,
+            transparent 104vw,
+            #01543f 112vw,
+            #23634e 25%,
+            #0b795d 43%,
+            #063e32 68%,
+            #075b49 86%,
+            #063e32 100%),
+        url('/images/figma-dashboard-bg.png') !important;
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% auto !important;
+    background-position: center top, center top, center top, center top, center top, center top !important;
+    background-repeat: no-repeat !important;
+    background-attachment: scroll !important;
+}
+
+/* Older education views had a viewport-fixed gradient div; use the shared scrolling canvas instead. */
+body[data-page]:not([data-page="home"]):not([data-page="login"]):not([data-page="register"]) .landscape {
+    display: none !important;
+}

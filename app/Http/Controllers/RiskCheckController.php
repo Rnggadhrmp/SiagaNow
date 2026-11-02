@@ -14,6 +14,19 @@ class RiskCheckController extends Controller
         return view('risk-check');
     }
 
+    public function indexMobile(Request $request): JsonResponse
+    {
+        $assessments = RiskAssessment::query()
+            ->where('user_id', $request->user()->id)
+            ->latest()
+            ->limit(50)
+            ->get([
+                'id', 'latitude', 'longitude', 'input_parameters',
+                'result', 'limitations', 'status', 'created_at',
+            ]);
+
+        return response()->json(['data' => $assessments]);
+    }
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([

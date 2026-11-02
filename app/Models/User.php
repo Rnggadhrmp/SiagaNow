@@ -36,6 +36,10 @@ class User extends Authenticatable
         return $this->hasMany(RiskAssessment::class);
     }
 
+    public function familyGroups(): HasMany
+    {
+        return $this->hasMany(FamilyGroup::class);
+    }
     public function disasterReports(): HasMany
     {
         return $this->hasMany(DisasterReport::class);
