@@ -65,18 +65,18 @@
                 </span>
             </a>
 
-            <div class="sn-other-item is-planned" aria-disabled="true">
+            <a href="{{ route('informasi-longsor') }}" class="sn-other-item {{ request()->routeIs('informasi-longsor') ? 'is-current' : '' }}" @if(request()->routeIs('informasi-longsor')) aria-current="page" @endif>
                 <span class="sn-other-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 18 6-6 4 3 8-9"/><path d="M14 6h7v7"/></svg></span>
-                <span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Informasi tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Halaman belum dibuat</span></span>
-            </div>
+                <span><span class="sn-other-title">Informasi Tanah Longsor</span><span class="sn-other-desc">Informasi tanda awal, faktor risiko, dan tindakan saat terjadi longsor.</span><span class="sn-other-tag">Lihat Informasi</span></span>
+            </a>
             <div class="sn-other-item is-planned" aria-disabled="true">
                 <span class="sn-other-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 5-7"/></svg></span>
                 <span><span class="sn-other-title">Statistik Kejadian</span><span class="sn-other-desc">Ringkasan kejadian dan statistik bencana saat sumber data tersedia.</span><span class="sn-other-tag">Menunggu data</span></span>
             </div>
-            <div class="sn-other-item is-planned" aria-disabled="true">
+            <a href="{{ route('panduan-kesiapsiagaan') }}" class="sn-other-item {{ request()->routeIs('panduan-kesiapsiagaan') ? 'is-current' : '' }}" @if(request()->routeIs('panduan-kesiapsiagaan')) aria-current="page" @endif>
                 <span class="sn-other-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
-                <span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Langkah persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Halaman belum dibuat</span></span>
-            </div>
+                <span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Langkah persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span>
+            </a>
             <div class="sn-other-item is-planned" aria-disabled="true">
                 <span class="sn-other-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v14H3z"/><path d="m3 7 9 6 9-6"/></svg></span>
                 <span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi dan kabar kebencanaan setelah sumber berita ditentukan.</span><span class="sn-other-tag">Menunggu sumber data</span></span>
@@ -86,7 +86,7 @@
                 <span><span class="sn-other-title">Laporkan Kejadian</span><span class="sn-other-desc">Buka halaman Report untuk mengisi formulir pelaporan.</span></span>
             </a>
         </div>
-        <div class="sn-other-footer">Menu berlabel “Halaman belum dibuat” atau “Menunggu data” adalah penanda rancangan, bukan tautan aktif. Fitur dan data akan diaktifkan setelah halaman atau sumbernya tersedia.</div>
+        <div class="sn-other-footer">Sebagian menu berlabel “Menunggu data” karena sumber datanya belum tersedia. Pilih menu yang aktif untuk membuka halaman terkait.</div>
     </div>
 </div>
 
