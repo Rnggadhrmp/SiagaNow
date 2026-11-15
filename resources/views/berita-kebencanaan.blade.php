@@ -437,11 +437,14 @@ a.sn-other-item:hover{background:#edf8f1;transform:translateY(-1px)}
 .news-page{padding:22px 8px 30px}
 .news-page-title{margin:0 0 20px;padding:0 14px;color:var(--forest);font-size:clamp(30px,4vw,48px);font-weight:900;letter-spacing:-.8px;line-height:1.15;text-shadow:0 2px 2px #075b4920}
 .news-list{display:flex;flex-direction:column;gap:18px}
-.news-row{display:grid;grid-template-columns:minmax(230px,31%) minmax(0,1fr);gap:clamp(18px,4vw,48px);align-items:center;padding:10px 14px;border:1px solid rgba(255,255,255,.72);border-radius:14px;background:rgba(226,246,237,.52);box-shadow:0 3px 5px rgba(5,65,50,.22)}
+.news-row{display:block;min-width:0;padding:10px 14px;border:1px solid rgba(255,255,255,.72);border-radius:14px;background:rgba(226,246,237,.52);box-shadow:0 3px 5px rgba(5,65,50,.22)}
 .news-image{display:block;width:100%;height:clamp(150px,14vw,205px);object-fit:cover;border-radius:17px;border:1px solid rgba(7,91,73,.16);box-shadow:0 3px 5px #0002;background:#d9eee4}
-.news-detail{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) 36px;align-items:center;gap:12px;padding:12px 14px;border:1px solid rgba(75,112,98,.55);border-radius:15px;background:rgba(255,255,255,.53);box-shadow:0 3px 4px rgba(0,0,0,.2)}
+.news-detail{min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:clamp(16px,2vw,32px);padding:16px 20px;border:1px solid rgba(75,112,98,.55);border-radius:15px;background:rgba(255,255,255,.53);box-shadow:0 3px 4px rgba(0,0,0,.2)}
 .news-copy{min-width:0}
 .news-title{margin:0 0 6px;color:#111;font-size:clamp(17px,1.8vw,22px);font-weight:900;line-height:1.2}
+.news-title a{color:inherit;text-decoration:underline;text-decoration-color:transparent;text-underline-offset:4px}
+.news-title a:hover,.news-title a:focus-visible{text-decoration-color:currentColor}
+.news-article-image{display:block;width:clamp(180px,22vw,340px);height:clamp(140px,18vw,260px);object-fit:cover;border-radius:12px;background:#d9eee4}
 .news-description{margin:0;color:#17231f;font-size:clamp(12px,1.1vw,13px);font-weight:550;line-height:1.35}
 .news-meta{display:flex;flex-wrap:wrap;align-items:center;gap:18px;margin-top:12px;color:#15231e;font-size:12px}
 .news-meta-item{display:inline-flex;align-items:center;gap:8px}
@@ -453,7 +456,7 @@ a.sn-other-item:hover{background:#edf8f1;transform:translateY(-1px)}
 .news-page-button:focus-visible{outline:3px solid #f0b429;outline-offset:3px}
 .news-page-ellipsis{padding:0 2px;color:var(--forest);font-weight:900;letter-spacing:3px}
 .news-demo-note{margin:0 14px 16px;padding:10px 13px;border-left:4px solid #d99a35;border-radius:7px;background:#fff8e8;color:#6f541d;font-size:12px;line-height:1.5}
-@media(max-width:760px){.news-page{padding:15px 0 24px}.news-page-title{padding:0 8px}.news-row{grid-template-columns:1fr;gap:12px;padding:10px}.news-image{height:210px}.news-detail{grid-template-columns:minmax(0,1fr) 26px;padding:12px}.news-arrow{font-size:42px}.news-pagination{margin-left:8px;gap:7px}.news-page-button{min-width:36px;height:38px;font-size:18px}}
+@media(max-width:760px){.news-page{padding:15px 0 24px}.news-page-title{padding:0 8px}.news-row{padding:10px}.news-image{height:210px}.news-detail{grid-template-columns:minmax(0,1fr);gap:12px;padding:12px}.news-article-image{width:100%;height:clamp(190px,55vw,300px)}.news-arrow{font-size:42px}.news-pagination{margin-left:8px;gap:7px}.news-page-button{min-width:36px;height:38px;font-size:18px}}
 
 </style>
 
@@ -472,7 +475,24 @@ a.sn-other-item:hover{background:#edf8f1;transform:translateY(-1px)}
 <main class="content">
 <section class="hero-card news-page" aria-labelledby="page-title">
   <h1 class="news-page-title" id="page-title">Semua Berita</h1>
-  <p class="news-demo-note"><strong>Feed berita belum terhubung.</strong> SiagaNow tidak menampilkan kartu kejadian contoh sebagai berita aktual. Buka kanal resmi BNPB atau BPBD Sumatera Barat untuk pembaruan terkini.</p>
+  @if(($articles ?? collect())->isNotEmpty())
+    <p class="news-demo-note"><strong>Informasi historis.</strong> Tanggal kejadian dan sumber dicantumkan pada tiap artikel; halaman ini bukan feed peringatan aktif.</p>
+    <div class="news-list news-articles" aria-label="Artikel SiagaNow">
+      @foreach($articles as $article)
+        <article class="news-row"><div class="news-detail"><div class="news-copy">
+          <p class="source-kicker">{{ $article->category }} · {{ $article->is_simulation ? 'Data Simulasi' : ($article->source_name ?? 'Sumber tidak dicantumkan') }}</p>
+          <h2 class="news-title"><a href="{{ route('news.show',$article) }}">{{ $article->title }}</a></h2>
+          <p class="news-description">{{ $article->summary }}</p>
+          <div class="news-meta"><span class="news-meta-item">{{ $article->published_at?->format('d M Y') ?? 'Tanggal tidak tersedia' }}</span></div>
+        </div>
+          @if($article->image_path)<img class="news-article-image" src="{{ asset('storage/'.$article->image_path) }}" alt="{{ $article->image_alt }}" loading="lazy">@endif
+        </div></article>
+      @endforeach
+    </div>
+    {{ $articles->links() }}
+  @else
+  <p class="news-demo-note"><strong>Feed berita terkini belum terhubung.</strong> SiagaNow tidak menampilkan kejadian contoh sebagai berita aktual. Buka kanal resmi BNPB atau BPBD Sumatera Barat untuk pembaruan terkini.</p>
+  @endif
 
   <div class="news-list" aria-label="Sumber berita resmi">
     <article class="news-row source-row">

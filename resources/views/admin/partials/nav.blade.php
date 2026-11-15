@@ -1,0 +1,1 @@
+<a href="{{ route($routeName) }}" @if(request()->routeIs($routeName) || ($routeName !== 'admin.dashboard' && request()->routeIs(str_replace('.index','.*',$routeName)))) aria-current="page" @endif><span class="nav-icon" aria-hidden="true">{{ $icon }}</span>{{ $label }}</a>

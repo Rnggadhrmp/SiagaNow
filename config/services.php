@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'flood_ai' => [
+        'ingest_token' => env('FLOOD_AI_INGEST_TOKEN'),
+        'stale_after_minutes' => env('FLOOD_AI_STALE_AFTER_MINUTES', 5),
+    ],
+
 ];

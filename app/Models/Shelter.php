@@ -14,6 +14,8 @@ class Shelter extends Model
         'capacity',
         'status',
         'source',
+        'source_url',
+        'verified_by',
         'verified_at',
     ];
 

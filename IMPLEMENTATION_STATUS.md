@@ -23,7 +23,7 @@ Status berarti kondisi yang dibuktikan dari kode yang tersedia, bukan penilaian 
 | BR-07 pemantauan status laporan | Sebagian | Route `/report/status` dan view `report-status.blade.php` | Pengguna hanya melihat laporan miliknya. Status awal tersedia; perubahan oleh petugas/admin belum tersedia karena role/dashboard belum dirancang. |
 | BR-08 donasi dan transaksi | Sebagian | `donate.blade.php`, config demo | Dua program contoh tersedia pada Mode Demo dengan progres hitung otomatis, label simulasi, pencarian, dan tombol pembayaran nonaktif. Tidak ada model kampanye/transaksi atau payment gateway nyata. |
 | BR-09 layanan darurat/kontak | Belum tersedia | Tidak ada implementasi mobile | Sumber kontak perlu diverifikasi per lokasi; bukan sekadar nomor dummy. |
-| BR-10 pengelolaan admin | Belum tersedia | Tidak ada dashboard/policy admin | Peran dan dashboard belum ditentukan (TBD-12/di luar ruang lingkup mockup). Lindungi route admin bila ditambahkan. |
+| BR-10 pengelolaan admin | Sebagian — diperbarui 15 Nov 2026 | `/admin`, AdminAuthController, middleware permission, tiga role, modul admin dan audit log | Akun admin belum diberi role; AI service dan pembayaran belum tersedia. Lihat bagian Admin Dashboard untuk batas operasional. |
 | BR-11 akurasi dan konsistensi | Sebagian | Model shelter menyimpan `source`/`verified_at`; config demo terpusat | Label simulasi ada pada beranda/peta, belum diseragamkan pada seluruh halaman dan platform. |
 | BR-12 keamanan dan hak akses | Sebagian | Middleware `auth` untuk risk/report/donate; hashing dan regenerasi sesi di `AuthController` | Edukasi, berita, statistik, panduan dan katalog donasi sekarang publik sesuai BRD; tindakan/profil tetap dibatasi login. Belum ada role/policy. Audit ownership endpoint lanjutan. |
 | BR-13 kegagalan proses dijelaskan | Sebagian | API BMKG membedakan `unknown`, `warning_found`, `no_warning_found`; UI cek risiko menangani loading/error | Fallback peta/cuaca/statistik demo terkonfigurasi; pencarian/geocoding eksternal dapat gagal dan belum ada fallback semua halaman. |
@@ -34,7 +34,7 @@ Status berarti kondisi yang dibuktikan dari kode yang tersedia, bukan penilaian 
 | Pelaporan website (FR-WEB-15—18) | Sebagian | Form, controller, tabel `disaster_reports`, disk lokal privat, halaman status | Validasi, simpan, lampiran, dan status milik sendiri sudah berjalan pada SQLite test. Review petugas dan status lanjutan belum tersedia. |
 | Donasi website (FR-WEB-19—23) | Sebagian | Halaman daftar/pencarian kosong | Kampanye, kalkulasi dan payment belum tersedia; tidak ada transaksi dummy yang diklaim nyata. |
 | Flutter mobile (FR-MOB-01—30) | Sebagian | `D:\laragon\www\SiagaNowMobile`: beranda, pemuatan API, peta/shelter, form laporan, login token, navigasi layanan | Belum ada emulator/perangkat; rute navigasi aktual, Keluarga Siaga, donasi, kontak terverifikasi, dan pendaftaran dari app belum tersedia. |
-| Admin (FR-ADM-01—06) | Belum tersedia | Tidak ada modul admin | Butuh perancangan role/policy dan antarmuka; jangan memberi akses berdasar UI saja. |
+| Admin (FR-ADM-01—06) | Sebagian — diperbarui 15 Nov 2026 | Dashboard, peringatan, shelter, laporan, berita, donasi, pengguna/role, AI, jalan, audit log | Beberapa sumber eksternal/AI/payment belum tersedia; seluruh akses admin diperiksa di middleware backend. |
 
 ## Integrasi, data, dan database
 
@@ -220,3 +220,182 @@ Temuan awal: view web berdiri sendiri dan mengulang header/CSS, beranda memakai 
 
 - Tile OSM gagal di lingkungan browser, koneksi BMKG runtime dapat berubah/ditolak, dan feed resmi kejadian/shelter/peringatan Sumbar belum operasional.
 - Login dan submit laporan dari perangkat memerlukan akun uji sah yang disediakan, lalu dapat diuji tanpa mengubah data produksi. Contrast audit menyeluruh/zoom 200% belum dilakukan. Kesiapan ini tidak sama dengan kelulusan seluruh QA end-to-end.
+
+## QA Flutter RMX2001 dan API LAN — 2 November 2026
+
+- Tidak ada perubahan branch: backend tetap `feature/perbaikan-api` (ahead 2), mobile `main` (source QA modified as noted below). `php artisan migrate:status` menunjukkan 14 migration `Ran`; tidak ada migration, reset, import, atau write endpoint dijalankan. Laravel test suite memakai SQLite `:memory:`.
+- `php artisan serve --host=0.0.0.0 --port=8000` aktif. Host IPv4 saat uji `192.168.1.9`; PC dapat membuka API lokal dan IP LAN. Android berada di subnet yang sama tetapi koneksi langsung HP→PC timed out karena Windows Wi-Fi network category `Public`. Untuk QA perangkat dipakai `adb reverse tcp:8000 tcp:8000`, tanpa membuka firewall. APK QA memakai `http://127.0.0.1:8000/api`; konfigurasi ini bergantung pada kabel/ADB reverse dan bukan konfigurasi deployment Wi-Fi.
+- RMX2001 telah terotorisasi di ADB, APK terbaru dibangun/dipasang/dibuka. Dari aplikasi, log Laravel mencatat GET `/api/home`, `/api/news`, dan `/api/shelters`. UI menampilkan berita contoh berlabel simulasi, cuaca contoh karena request BMKG gagal, statistik latihan, status peringatan `unknown`, serta shelter contoh yang jelas bukan shelter terverifikasi. OSM basemap tampil pada peta perangkat; marker masih data simulasi dan bukan rute aman.
+- QA form perangkat: GPS (izin “Saat aplikasi digunakan”) berhasil mengisi latitude/longitude pada form. Nilai tidak dikirim dan screenshot yang memuat koordinat telah dihapus. Android file picker berhasil terbuka; tidak ada berkas dipilih/diunggah. Tombol riwayat dan submit laporan memerlukan login.
+- Guest endpoint `/api/reports`, `/api/user`, `/api/family-groups` memberi 401. UI mengarahkan report/profil/Family ke login. Tidak ada akun uji sah, jadi login/token persistence/profile, submit lampiran, riwayat, family CRUD/check-in/reminder/invitation belum diuji dari HP. Tidak ada akun, laporan, atau transaksi uji dibuat.
+- `php artisan test` awalnya memberi 28/30 lulus. Dua kegagalan ternyata karena test mengganti token dalam satu app lifecycle tanpa `Auth::forgetGuards()`: user owner tetap ter-cache pada request invitation/reminder. Setup test diperbaiki (bukan otorisasi aplikasi); suite ulang lulus **30 tests / 209 assertions**. `git diff --check` lulus.
+- Flutter `flutter pub get` memakai constraint/lockfile yang ada. Ditemukan dan diperbaiki konfigurasi peta yang memakai `double.fromEnvironment` tidak tersedia; nilai env kini dibaca sebagai string dan di-parse dengan fallback default yang sama. Test fixture Family kini mencakup GET membership. `flutter test --no-pub` lulus **12 tests**. Analyzer Flutter final bersih tanpa issues setelah `DropdownButtonFormField.value` diganti ke `initialValue`. Flutter CLI APK build gagal menutup Kotlin incremental cache lintas-drive; direct Gradle dengan incremental Kotlin dimatikan berhasil. Android runtime/home/news/map/report/more diperiksa pada RMX2001.
+- Perubahan kode tahap ini: `D:\laragon\www\SiagaNowMobile\lib\main.dart`, `D:\laragon\www\SiagaNowMobile\test\feature_lifecycle_layout_test.dart`, dan `tests/Feature/MobileFamilyRiskApiTest.php`. Tema, palet, ikon, font, dan layout tidak didesain ulang. Database MySQL tidak diubah.
+
+### Status QA
+
+- Berhasil: instalasi/pembukaan APK di HP; panggilan API publik melalui USB reverse; home/news/shelter/weather states; OSM tile render; GPS memperoleh lokasi; file picker terbuka; Laravel dan Flutter tests.
+- Belum lulus/diblokir: koneksi melalui Wi-Fi langsung (firewall/network profile), autentikasi dan semua alur akun tanpa kredensial uji, upload/submit/riwayat/family end-to-end. Mode data BMKG sesi ini fallback simulasi; tidak ada feed live berita/statistik/shelter/peringatan Sumbar.
+
+### Pembaruan akun QA lokal — 2 November 2026
+- Dengan persetujuan pengguna, satu pengguna QA dummy dibuat pada MySQL lokal `siaganow` (`127.0.0.1:3306`), user ID 4, email `siaganow.qa.2026@example.test`; kredensial diberikan melalui percakapan dan tidak disimpan di repositori. Akun tidak dihapus.
+- Uji API Laravel memakai akun QA: login berhasil, `GET /api/user` mengembalikan profil yang tepat, logout mencabut token sesi, dan pemakaian token yang dicabut ke `GET /api/user` mendapat **401**. Tidak ada perubahan skema atau migration.
+- Uji perangkat untuk memasukkan kredensial, pemulihan sesi, tampilan profil, dan logout belum berjalan: ADB mengenali RMX2001 namun melaporkan `unauthorized` pada sesi host ini. Menunggu konfirmasi USB debugging pada perangkat. Setelah tersambung, siapkan USB reverse lagi karena server Laravel berjalan pada port 8000.
+
+### Hasil uji autentikasi perangkat — 2 November 2026
+- USB debugging disetujui kembali; aplikasi RMX2001 terhubung ke Laravel lewat USB reverse port 8000. Login pada perangkat berhasil dan API log mencatat `POST /api/login`, `GET /api/user`, serta `GET /api/reports`.
+- Force-stop lalu membuka ulang aplikasi (tanpa clear data) memulihkan sesi: aplikasi kembali ke Beranda sebagai pengguna masuk dan API mencatat `GET /api/user`; halaman Profil menampilkan nama, email, dan nomor HP akun QA.
+- Logout dari Profil kembali ke Beranda sebagai tamu dan menampilkan pesan berhasil. Jumlah `personal_access_tokens` untuk pengguna QA berubah dari 1 menjadi 0. Setelah relaunch, aplikasi tetap sebagai tamu; `GET /api/user` tanpa token memberi **401**. API test terpisah juga memastikan token tercabut mendapat 401.
+- Profil baca telah diverifikasi. Endpoint update profil mobile belum tersedia (`routes/api.php` hanya menyediakan `GET /api/user`); tombol edit memang memberi keterangan bahwa perubahan belum tersedia. Tidak ada perubahan tampilan atau backend pada tahap QA ini.
+- Tahap berikutnya: audit/uji laporan bencana Flutter tanpa menyimpan laporan fiktif; submit end-to-end menunggu detail kejadian nyata untuk uji atau persetujuan eksplisit membuat data laporan QA yang jelas ditandai.
+
+### Laporan mobile — pemeriksaan form dan API — 2 November 2026
+- Form laporan pada RMX2001 diperiksa dalam keadaan tamu: koordinat tidak terisi otomatis; validasi kosong menampilkan judul, koordinat, dan deskripsi yang wajib/invalid; form tidak login otomatis dan tidak mengirim POST. Jumlah laporan untuk akun QA tetap 0.
+- Screenshot perangkat menunjukkan pesan batas latitude/longitude sebelumnya terpotong satu baris. `SiagaNowMobile/lib/main.dart` kini memberi `errorMaxLines: 2` pada input form agar pesan batas terbaca lengkap. Tidak ada perubahan warna, font, struktur form, atau ukuran normal komponen.
+- Tes regresi widget baru membuktikan validasi lengkap dan tanpa pengiriman pada form tamu. `flutter analyze --no-pub` bersih; semua **13 tes Flutter** lulus.
+- Flutter CLI build kembali gagal karena Kotlin incremental cache lintas drive (`C:` Pub cache dan `D:` proyek). Build APK berhasil lewat Gradle dengan `kotlin.incremental=false`, strategi compiler in-process, dan API base USB reverse `http://127.0.0.1:8000/api`. APK 185,653,908 byte dipasang dengan `adb install -r` (data aplikasi dipertahankan), dan pesan koordinat lengkap diverifikasi di RMX2001.
+- Laravel `MobileApiTest`: **8 tes / 40 assertion** lulus sebelumnya pada SQLite pengujian; mencakup otorisasi riwayat, validasi lampiran dan private storage, payload laporan, serta akses tamu. Laporan asli tidak dibuat pada MySQL lokal. Submit laporan dan upload dari Flutter belum dijalankan karena tidak ada kejadian nyata yang diberikan untuk pelaporan.
+- Sesudah regresi APK, login akun QA kedua kali hanya untuk memeriksa riwayat: API device `GET /api/reports` tercatat di log dan layar menunjukkan empty state akun. Logout dilakukan lagi; verifikasi MySQL akhir menunjukkan **0 laporan QA, 0 personal access token QA**. Akun QA tetap tersimpan.
+- Tambahan uji Flutter terisolasi memverifikasi serialisasi form laporan menjadi multipart, Bearer header, field `evidence[]`, nama file, serta respons receipt mock. Payload hanya ditangani MockClient test dan tidak dikirim ke Laravel. Final Flutter regression: analyzer bersih dan **14 tes lulus**.
+
+### Family Siaga — pemeriksaan read-only pada RMX2001 — 2 November 2026
+- Login QA di perangkat; `GET /api/family-groups` dan `GET /api/family-memberships` dipanggil dan halaman menampilkan empty state “Belum ada grup keluarga”. Tidak ada grup, anggota, undangan, atau check-in dibuat.
+- Setelah logout, MySQL lokal terverifikasi: 0 token, 0 laporan, 0 grup keluarga QA, dan 0 anggota keluarga QA. Akun QA dipertahankan.
+- Tes API terisolasi `MobileFamilyRiskApiTest`: **7 tes / 71 assertion** lulus. Operasi mutasi tetap hanya tercakup oleh tes terisolasi, belum dikirim lewat perangkat karena akan membuat data keluarga contoh pada database lokal.
+
+### Pengayaan konten demonstrasi — 2 November 2026
+- API berita demo kini mengembalikan tiga materi simulasi yang ditandai pada level respons, bersifat edukatif/skenario, dan mencantumkan kredit/konteks foto; tidak ada klaim kejadian aktif, lokasi evakuasi, koordinat, atau risiko terverifikasi.
+- Fallback BMKG tetap mencoba feed resmi. Saat permintaan gagal dan Mode Demo aktif, respons kini memiliki kondisi saat ini dan tiga interval prakiraan contoh; kelembapan yang dipakai adalah kelembapan udara, bukan kelembapan tanah. Respons tetap `data_type=simulation`, sumber Contoh Data SiagaNow, status fallback, dan pesan kegagalan sumber aktual.
+- Aset gambar lokal Flutter: Iqro Rinaldi, “Flooding submerges houses, people gather to seek shelter” (Jakarta, 4 Maret 2025), dan Justin Hu, foto gunung berhutan di Tahiti setelah hujan. Keduanya dari Unsplash License; foto banjir hanya ilustrasi asal Jakarta, foto pegunungan bukan peta/lokasi risiko Sumatera Barat. Kredit dan caption terlihat pada detail berita.
+- Verifikasi: `php -l` untuk config dan service lulus; `DemoNewsTest` + `BmkgForecastTest` lulus **5 tes / 33 assertion**. Endpoint lokal `/api/home` menjawab 200 dengan tiga prakiraan simulasi, suhu 28°C, kelembapan udara 78%, sumber berlabel, dan peringatan berstatus unknown. Tidak ada perubahan database/migration.
+- Regresi Laravel lengkap setelah perubahan: **32 tes / 221 assertion lulus**. Tidak ada tabel atau data MySQL lokal yang diubah.
+
+### Logo Flutter dan perbandingan database Imam — 2 November 2026
+- Navbar website memakai aset resmi `public/images/siaganow-nature-emblem.png` (384×256, 62,384 byte). Salinan byte-identik dipasang pada aset Flutter dan menggantikan ikon shield placeholder di header; rasio logo dipertahankan, tema dan layout lainnya tidak diubah.
+- `SiagaNowGwehV4.sql` diimpor hanya ke database review `siaganow_imam_review_20261102_a1`, dibandingkan dengan MySQL aktif, lalu database review buatan tahap ini dihapus setelah pemeriksaan. Database utama `siaganow` tidak menerima import, perubahan tabel, maupun penghapusan data.
+- Kedua skema berisi 18 tabel bernama sama; tidak ada tabel yang hilang/ekstra. Seluruh tabel selain `family_members` cocok pada kolom, tipe, indeks, dan foreign key. Database aktif lebih baru: migration `2026_11_01_000002_extend_family_members_for_checkins_and_reminders` sudah `Ran`; dump Imam tidak memilikinya. Karena itu `family_members` Imam tidak mempunyai 10 kolom tambahan (tautan user, catatan, check-in, token idempotensi check-in, pengingat, dan hash/kedaluwarsa undangan) beserta foreign key/index terkait yang dipakai model/controller aktif. Tidak perlu migration baru.
+- Ringkasan data (tanpa membuka/menyalin nilai pribadi): dump memiliki 2 user, 1 token, 1 laporan, 1 grup/anggota keluarga, 6 asesmen risiko, 158 peringatan, dan 19 sesi. Database aktif memiliki 3 user, 0 token/laporan/grup/anggota, 4 asesmen risiko, 123 peringatan, dan 1 sesi. Dua user dump bertabrakan pada ID/email; satu row berbagi ID berbeda hanya pada `remember_token`. Empat asesmen risiko tumpang tindih identik; dua sisanya berpotensi data historis/alamat pribadi. Data laporan/keluarga terikat akun dan tidak ditandai simulasi, sedangkan token/sesi adalah kredensial aktif potensial; semuanya tidak dipindahkan.
+- Dari 158 warning dump, 123 identik sudah ada di database aktif dan 35 ID belum ada. Semua 158 bersumber `BMKG` dengan URL `www.bmkg.go.id`, tetapi seluruhnya telah kedaluwarsa; tidak diimpor sebagai peringatan aktif. Tabel `shelters`, `hazard_zones`, dan `disaster_events` kosong pada kedua sisi, sehingga tidak ada data keselamatan yang dapat dipindahkan.
+- Verifikasi setelah inspeksi: `php artisan migrate:status` tetap menunjukkan kedua migration Family `Ran`; tidak ada migration baru. Laravel test tidak diulang karena kode/backend schema tidak diubah. Flutter analyzer masih menampilkan satu info lint lama; semua **14 tes Flutter lulus**, APK debug berhasil dibangun dan diperbarui pada RMX2001 memakai `adb install -r` (data instalasi saat ini dipertahankan). Screenshot header logo diperiksa pada [hasil RMX2001](C:/Users/lenovo/.codex/visualizations/2026/10/25/01a1723c-cb56-7c91-b9d6-dd2217dd4c47/siaganow-rmx2001-logo-check.png).
+
+## Audit lanjutan backend — 15 November 2026
+
+### Kondisi dan status fitur
+
+- Git tetap pada `feature/perbaikan-api`, commit `ef479a1`, tiga commit di depan `origin/feature/perbaikan-api`. Perubahan lokal sebelum tahap ini dipertahankan: `IMPLEMENTATION_STATUS.md`, `BmkgForecastService.php`, `config/siaganow.php`, dua test yang dimodifikasi, dan `DemoNewsTest.php` yang belum di-track. Tidak ada reset, checkout, commit, atau push.
+- Informasi longsor, berita/edukasi, statistik, donasi demonstrasi, autentikasi, laporan, risiko, shelter/peta, dan API mobile memiliki route/controller/view/model. Keberadaan halaman tidak berarti seluruh fungsi operasional tersedia; matriks BRD di atas tetap menunjukkan feed berita/statistik/shelter resmi, skor risiko berbasis data, pembayaran, rute evakuasi, dan dashboard admin belum tersedia.
+- BMKG forecast memakai endpoint resmi, kode administrasi `adm4`, validasi respons/lokasi, timeout koneksi/permintaan, cache file 45 menit, dan fallback berlabel jika Mode Demo aktif. Test menguji respons sukses dan gagal dengan HTTP fake; akses jaringan BMKG dari runtime pada tahap ini tidak diuji, sehingga data aktual tidak dinyatakan terintegrasi secara live.
+- Cek risiko memvalidasi koordinat dan masukan, menyimpan asesmen dengan status `pending`, daftar keterbatasan, dan `result=null` bila bukti tidak tersedia. Tidak ada skor atau klaim risiko alamat yang dibuat.
+- Program donasi adalah konfigurasi demonstrasi; pembayaran tidak aktif. Informasi edukasi longsor berupa halaman statis, bukan feed kejadian terbaru.
+
+### Perbaikan dan database
+
+- Penelusuran menemukan API serta halaman peta sebelumnya dapat menyertakan shelter dengan koordinat valid meskipun `verified_at` kosong. Query publik kini membatasi marker/hasil pencarian ke shelter yang telah diverifikasi; data simulasi tetap dipakai saat Mode Demo aktif dan hasil DB kosong. Test regresi memastikan shelter yang belum diverifikasi tidak muncul.
+- `migrate:status` pada MySQL lokal menunjukkan migration `2026_11_01_000002_extend_family_members_for_checkins_and_reminders` masih `Pending`, sedangkan tabel aktual hanya memiliki kolom inti. `migrate --pretend` memperlihatkan operasi penambahan 10 kolom, FK nullable ke users dengan `ON DELETE SET NULL`, indeks, dan unique nullable; tidak ada drop/truncate atau perubahan data yang direncanakan. Migration aditif itu kemudian dijalankan satu kali. Status kini seluruh 14 migration `Ran`; `family_members` kini memiliki 17 kolom dan FK yang dipakai endpoint Family. Tidak ada migration baru, reset, penghapusan, atau impor database.
+- Koneksi Laravel ke MySQL lokal berhasil untuk inspeksi dan migration. Test Laravel tetap memakai SQLite `:memory:` sesuai `phpunit.xml`; hasil test bukan klaim uji keseluruhan terhadap data MySQL.
+
+### Verifikasi aktual tahap ini
+
+- `php -v`: PHP 8.3.33; `composer -V`: Composer 2.10.2; Laravel Boost 2.10 sudah tercantum pada dependensi dan setup Boost telah didokumentasikan sebelumnya.
+- `php artisan route:list`: 47 route total, 27 route API. `php artisan view:cache` berhasil.
+- `npm run build`: berhasil dengan Vite 8.3.5.
+- Laravel regresi penuh sesudah perubahan: **32 tes / 223 assertion lulus**. Sebelum perubahan filter shelter, tes terarah lulus 16/16 dengan 121 assertion. PHP lint untuk file yang disentuh lulus; `git diff --check` bersih.
+- `migrate:status` dan `db:table family_members` dijalankan setelah migration untuk memverifikasi status serta kolom/FK aktual.
+- Screenshot browser dan koneksi runtime eksternal BMKG tidak dijalankan pada tahap ini. QA visual website dan integrasi BMKG live tetap belum terverifikasi.
+
+### Langkah berikutnya
+
+1. Uji operasi Family API terhadap skema MySQL lokal dengan data QA yang disetujui, atau gunakan test SQLite terisolasi; jangan membuat data pengguna/keluarga tanpa kebutuhan.
+2. Uji endpoint BMKG dari runtime Laravel terpisah dari test fake, lalu catat apakah respons aktual berhasil atau fallback digunakan.
+3. Lanjutkan pengujian browser pada halaman berita/longsor, peta, donasi, dan cek risiko; status produksi untuk berita, shelter, zona bahaya, statistik, pembayaran, dan rute tetap belum tersedia sampai sumber/layanan terverifikasi.
+
+## Admin Dashboard Laravel — 15 November 2026
+
+### Implementasi
+
+- Admin Dashboard nyata tersedia di `/admin` dengan login session terpisah secara tampilan, sidebar/topbar responsif, statistik dari tabel aktual, flash/error state, tabel, pencarian/status filter, pagination, form tambah/edit, dan empty state. Tema mengambil token hijau/mint-krem website dan logo `public/images/siaganow-nature-emblem.png`; Poppins dipakai khusus halaman admin. Halaman pengguna umum tidak di-redesign.
+- Modul yang dibuat: ringkasan, peringatan terkelola, zona terdampak, shelter, laporan dan lampiran privat, berita/edukasi, program donasi, pengguna/role, pemantauan AI, insiden jalan terdampak, audit log, serta tampilan cuaca BMKG read-only. Laporan dari web/mobile tersimpan pada tabel `disaster_reports` yang sama; shelter memakai tabel `shelters`; berita/program/peringatan/jalan terverifikasi tersedia melalui Laravel/API, bukan database per platform.
+- RBAC backend menerapkan `super-admin`, `disaster-officer`, dan `content-admin` melalui middleware permission pada route. Tidak ada pengguna yang otomatis diberi role. Role awal dapat ditetapkan kepada akun existing melalui `php artisan admin:assign-role email@anda super-admin`, lalu konfirmasi pada prompt. Password tidak dibuat atau dicetak. Admin harus memakai login yang sama dengan kredensial akun tersebut pada `/admin/login`.
+- Audit log mencatat login sukses/gagal, logout, perubahan konten, status laporan, verifikasi, dan perubahan role; perintah role CLI juga menulis jejak tanpa menyimpan kredensial. Aksi mutasi memerlukan permission di server.
+- Berita terbit dari database ditampilkan pada website dan `/api/news`; `is_simulated` dan sumber dibawa pada respons. Program donasi hanya menampilkan informasi kampanye nyata yang terverifikasi, tanpa dana terkumpul atau transaksi; payment gateway belum ada. Endpoint API tambahan: `/api/donation-campaigns`, `/api/managed-alerts`, dan `/api/affected-roads`.
+- Informasi BMKG tetap hanya dibaca dari service yang sudah ada. Peringatan manual dikelola sebagai sumber terpisah dan wajib sumber/URL terverifikasi agar aktif. Shelter/zona/jalan baru dimulai sebagai belum terverifikasi. Marker zona publik kini hanya mengambil record dengan `verified_at`.
+- AI service ditandai `Tidak tersedia`: tidak ada koneksi service Python/feed kamera yang dibuktikan. Admin dapat mengelola metadata kamera dan meninjau hanya hasil deteksi yang tersimpan; tidak tersedia pembuatan hasil deteksi, threshold kalibrasi, atau klaim live monitoring.
+- Repository Flutter tidak diubah pada tahap dashboard Laravel ini. API bersama tersedia, tetapi pemakaian endpoint donasi/peringatan/jalan pada layar mobile tetap perlu disesuaikan dan diuji pada tahap mobile terpisah.
+
+### Database dan migrasi
+
+- Sebelum perubahan, MySQL lokal `siaganow` aktif dengan 14 migration `Ran`, 18 tabel, 2 pengguna, 1 laporan, 1 token, 1 grup keluarga dan 1 anggota. `migrate --pretend` diperiksa sebelum migrasi.
+- Migration aditif `2026_11_15_000001_create_admin_management_tables` telah diterapkan: menambah `users.account_status`, `shelters.source_url/verified_by`, `hazard_zones.source_url/verified_by`, serta sembilan tabel manajemen (role/pivot, audit log, berita, peringatan, program donasi, metadata kamera, deteksi, jalan terdampak). Tiga definisi role dimasukkan; pada saat migration tidak ada akun yang diberi role. Sebelum artikel BNPB dipublikasikan, satu akun Super Admin aktif dengan permission news.manage sudah tersedia. Tidak ada tabel/data existing dihapus atau di-reset.
+- Setelah migrasi, `migrate:status` menunjukkan 15 migration `Ran`; `db:show --counts` menunjukkan 27 tabel. Count tabel existing tetap users 2, reports 1, personal access tokens 1, family groups 1, family members 1; tabel modul admin baru selain `admin_roles` masih kosong. Akun existing hanya menerima nilai default status `active` saat kolom baru ditambahkan.
+
+### QA tahap ini
+
+- `php artisan test`: **38 tes lulus, 257 assertion**. Termasuk render halaman modul admin pada database kosong, autentikasi admin, penolakan user biasa, pembatasan role konten terhadap laporan, publikasi artikel dan URL foto sesuai host request, BMKG, dan shelter.
+- `npm run build`: berhasil (Vite 8.3.5). `php artisan view:cache`: berhasil. `php artisan route:list --path=admin`: 59 route admin terdaftar. `php artisan route:list --path=api`: endpoint API bersama terdaftar. `php -l` pada migration, route, controller yang disentuh lulus. `git diff --check`: bersih.
+- HTTP lokal `GET /admin/login` merespons 200. Smoke test API lokal `/api/news`, `/api/donation-campaigns`, `/api/managed-alerts`, dan `/api/affected-roads` masing-masing merespons 200. Screenshot browser/dashboard terautentikasi belum diperiksa pada tahap ini; modul Playwright/browser tidak tersedia pada sesi ini. Pada tahap publikasi artikel berikutnya, alur controller admin dijalankan dengan satu Super Admin aktif; tidak ada kredensial baru dibuat.
+- Git tetap pada branch `feature/perbaikan-api`, commit `ef479a1` (ahead 3). Perubahan lokal yang sudah ada tetap dipertahankan. Tidak ada commit/push.
+
+### Belum selesai / persiapan operasional
+
+- Satu akun Super Admin aktif dengan permission news.manage telah digunakan untuk menerbitkan artikel BNPB melalui controller admin. Tidak ada akun atau kredensial QA baru dibuat. Untuk operasi admin berikutnya, gunakan akun tersebut melalui `/admin/login`; verifikasi login browser dan CRUD langsung masih belum dilakukan.
+- Feed AI Flood Detection, source data resmi untuk peringatan manual/zona/shelter/jalan dan payment gateway belum tersedia. Panel menunjukkan ketiadaan layanan/data secara eksplisit; tabel kosong bukan indikator kejadian tidak ada.
+- QA visual screenshot pada desktop/mobile dan uji CRUD langsung melalui sesi browser terautentikasi masih perlu dilakukan setelah akun existing dipilih dan diberi role. Pengujian otomatis memakai SQLite `:memory:`; hanya status migration/schema/count dilakukan pada MySQL lokal.
+
+## Artikel banjir BNPB — 15 November 2026
+
+- PDF yang diberikan diperiksa secara visual, termasuk halaman 12–13. Artikel historis diterbitkan melalui `AdminNewsController::store()` setelah memeriksa akun Super Admin aktif dengan hak `news.manage`; tindakan tercatat pada audit log sebagai `news.created`. Artikel berstatus `published`, sumber BNPB, dan `is_simulation=false`. Tidak ada migration atau perubahan pengguna.
+- Artikel: “BNPB: Banjir Jabodetabek Maret 2025 Rendam 72.050 Rumah”. Ringkasan merekam angka historis Buletin BNPB Maret 2025 (72.050 rumah terendam dan 259.883 jiwa terdampak/mengungsi) serta menegaskan angka tersebut bukan status terkini. Detail berita mengarahkan pembaca ke sumber resmi.
+- Foto bukan gambar AI: foto udara banjir Jatiasih, Kota Bekasi, 4 Maret 2025, dipotong dari halaman 13 PDF yang diberikan. Alt text dan caption mencantumkan kredit “Pesawat NIR Awak Tim Pusdatinkomben”. Aset tersimpan di disk publik `news/3FnQMiJIOSOa5Vzz3rX6YbUOYq8PU15aHkqUctel.jpg` (sekitar 153 KB); symlink `public/storage` dibuat agar dapat diakses melalui web.
+- Beranda daftar berita sekarang menandai konten sebagai informasi historis, bukan feed peringatan aktif. Artikel aktual tidak memiliki label simulasi. Fallback simulasi pada fitur lain tidak dihapus atau diberi label aktual.
+- API `/api/news` mengembalikan artikel database dengan `is_simulated=false`; URL foto dibentuk memakai host request agar mengikuti base URL yang dipakai klien mobile. Tidak ada perubahan API lain.
+- Verifikasi aktual: halaman daftar, detail artikel, dan file gambar masing-masing HTTP 200 pada Laravel lokal; `/api/news` HTTP 200 dan respons mengembalikan sumber BNPB, `data_type=database`, serta `is_simulated=false`. Tes Laravel penuh: **38 tes / 257 assertion lulus**; Blade view cache berhasil. Tidak ada screenshot browser yang diambil.
+
+## Perbaikan navigasi berita dan lebar layar — 15 November 2026
+
+- Header bersama memiliki radius 20 px. Markup menu Other diperbaiki: Statistik tetap menjadi item nonaktif, sedangkan Berita Kebencanaan adalah satu tautan valid yang membuka route publik `/berita-kebencanaan`; tautan ini juga menandai halaman aktif pada daftar dan detail artikel. Status “Menunggu sumber data” diganti dengan tautan aktif karena artikel BNPB terverifikasi sudah tersedia. Menu ini dirender melalui partial navigasi bersama pada halaman-halaman publik, termasuk Dashboard dan peta.
+- Daftar berita tidak lagi memakai grid dua kolom untuk kartu artikel. Kartu mengisi area konten, dengan foto berukuran responsif; sumber berita eksternal tetap tersusun dua kolom pada layar lebar. Pada layar desktop lebar mulai 1600 px, header dan area konten menggunakan lebar maksimum 1680 px dengan gutter 40 px per sisi. Detail berita mengikuti lebar desktop dan turun ke satu kolom pada layar kecil.
+- Tautan “Kembali ke berita” menjadi tombol tautan dengan area sentuh minimum 48 px dan fokus keyboard yang jelas. Tema, warna identitas, dan database tidak diubah.
+- QA aktual: `php artisan test` lulus **40 tes / 266 assertion**; `php artisan view:cache` berhasil. Test memastikan menu berita muncul tepat satu kali dan dapat dibuka dari Dashboard, serta panel awal tetap tersembunyi. Chrome headless gagal saat inisialisasi GPU; Edge headless tidak menghasilkan screenshot pada lingkungan ini, sehingga inspeksi visual screenshot desktop/mobile belum terkonfirmasi.
+
+## Opacity ilustrasi Dashboard — 15 November 2026
+
+- Pemeriksaan PNG membuktikan bidang hijau muda (#D6F1E2) tertanam langsung di ilustrasi peringatan, cuaca, kelembapan tanah, dan peta Indonesia. Salinan khusus Dashboard dibuat dengan piksel latar dasar transparan dan warna tepinya ber-opacity rendah; bentuk dan warna objek ilustrasi dipertahankan. PNG referensi asli tidak ditimpa.
+- Hanya referensi gambar pada `resources/views/partials/dashboard-home.blade.php` yang diarahkan ke salinan baru. Tidak ada halaman lain, tema, API, atau database yang diubah.
+- QA: komposit tiap ilustrasi diperiksa visual pada warna latar kartu terkait; `GET /` dan keempat aset baru merespons HTTP 200. `php artisan test`: **40 tes / 270 assertion lulus**; `php artisan view:cache` berhasil. Screenshot browser Dashboard belum dapat diperiksa pada sesi ini.
+
+## Ikon statistik dan lapisan info shelter Dashboard — 15 November 2026
+
+- Glif statistik yang bergantung pada font diganti SVG outline untuk jumlah kejadian, jumlah orang terdampak, statistik, ikon shelter, dan pin daftar shelter. Tidak ada paket ikon baru.
+- Daftar shelter memakai dasar hijau forest yang lebih tegas dan tiap baris mendapat inset layer tipis; teks nama putih dan detail hijau pucat untuk meningkatkan kontras tanpa mengganti palet.
+- Perubahan dibatasi ke partial Dashboard dan token CSS komponennya; struktur data dan database tidak berubah.
+- QA aktual: test Dashboard memastikan SVG statistik/shelter dirender; `php artisan test` lulus **40 tes / 273 assertion**; `php artisan view:cache` berhasil; HTTP Dashboard 200. Screenshot halaman penuh belum diperiksa.
+## Integrasi Admin AI Flood ke Web dan Mobile — 15 November 2026
+
+### Perubahan tahap ini
+
+- Admin `/admin/ai` dan kartu AI pada dashboard admin kini memakai `FloodDetectionService` yang sama dengan `GET /api/flood-detections`, `GET /api/home`, homepage website, dan Home Flutter. Service menurunkan status terbaru hanya dari observasi pada sumber yang diaktifkan. Observasi lewat ambang freshness (default 5 menit), belum ada data, atau database tidak tersedia menghasilkan `unknown`, tidak pernah diubah menjadi Normal.
+- Perbaikan form sumber kamera: checkbox izin ingest kini benar-benar menyimpan `is_enabled`; sebelumnya create selalu memaksa sumber nonaktif. Keterangan UI membatasi makna aktivasi pada izin menerima ingest API; hal ini tidak menyatakan kamera/video atau model sedang hidup.
+- Endpoint ingest `POST /api/ai/detections` hanya menerima Bearer token dari `FLOOD_AI_INGEST_TOKEN`, menolak ingest saat secret belum dikonfigurasi (503), membatasi request, memvalidasi sumber aktif/status/confidence/waktu, dan idempotent berdasarkan `external_reference`. Observasi baru berstatus tinjauan `pending`. Feed publik hanya menyertakan sumber aktif, tidak mengirim koordinat kamera, dan menandai status verifikasi serta asal model. Rute `/api/home` menambahkan `flood_detection`; feed riwayat ada di `/api/flood-detections`.
+- Website homepage dan Home Flutter menampilkan status, pesan sumber, kamera/waktu/confidence, dan status tinjauan petugas bila tersedia, serta keterangan bahwa hasil model bukan peringatan resmi. Tidak ada desain/tema halaman lain yang diganti.
+- Tidak ada migration atau perubahan database tahap ini. Kolom/tabel memakai migration AI yang sudah tersedia.
+
+### Status aktual dan batasan
+
+- Uji HTTP runtime ke `/api/flood-detections` menghasilkan 200 dengan `service_status=not_configured`, `status=unknown`, dan daftar observasi kosong. `FLOOD_AI_INGEST_TOKEN` tidak dikonfigurasi pada runtime saat pemeriksaan dan tidak ditemukan service/model Python atau sumber kamera aktif yang dapat membuktikan inferensi langsung. Karena itu integrasi backend/API siap menerima kontrak dari model eksternal setelah konfigurasi, tetapi deteksi live belum tersambung dan tidak boleh diklaim operasional.
+- Operasionalisasi membutuhkan service model yang mengirim payload tervalidasi ke endpoint menggunakan Bearer token server-side. Rahasia tidak dicetak atau ditanamkan di aplikasi/web.
+- RMX2001 ditemukan melalui ADB pada path SDK yang tercatat di `android/local.properties`, APK `install -r` berhasil dan activity dibuka, tetapi layar HP terkunci sehingga kartu tidak dapat diperiksa secara visual tanpa interaksi pemilik. `adb reverse` disiapkan; HTTP dari shell perangkat tidak diuji karena `toybox wget` tidak tersedia. Widget test membuktikan kartu membaca payload Home; uji UI/API end-to-end di HP masih tertunda.
+
+### Pengujian aktual
+
+- `php artisan test --compact`: **48 tes, 308 assertion lulus**. Mencakup ingest disabled tanpa token, token salah, sumber nonaktif, ingest terautentikasi, idempotensi, freshness/stale menjadi Unknown, render homepage/API bersama, akses halaman admin, serta izin ingest kamera.
+- `php artisan view:cache`: berhasil. `php artisan route:list --path=api/flood` dan `--path=admin/ai`: route ditemukan. `git diff --check`: bersih kecuali peringatan line-ending pada file lokal lain yang sudah berubah.
+- `npm run build`: Vite berhasil.
+- Flutter: `flutter analyze --no-pub` bersih; `flutter test --no-pub`: **28 tes lulus**, termasuk widget Home yang membaca field AI dari payload Laravel.
+- Build standar `flutter build apk --debug --no-pub` gagal akibat bug Kotlin incremental lintas drive (`C:` Pub cache dan `D:` project). Workaround Gradle terkutip `assembleDebug -Pkotlin.incremental=false -Pkotlin.compiler.execution.strategy=in-process` berhasil (**BUILD SUCCESSFUL**). APK final dengan base URL USB reverse dipasang ke RMX2001 memakai `adb install -r` (**Success**, data aplikasi dipertahankan). Aplikasi sebelumnya terbuka, tetapi layar HP terkunci saat screenshot terakhir sehingga tampilan final dan alur request dari UI tidak diverifikasi secara visual.
+
+### Langkah operasional berikutnya
+
+1. Hubungkan service/model AI flood yang benar dan verifikasi format confidence serta label `normal/warning/danger/unknown` dari pemilik model.
+2. Konfigurasikan `FLOOD_AI_INGEST_TOKEN` secara privat pada Laravel dan service model, lalu aktifkan metadata sumber kamera yang memang beroperasi.
+3. Kirim satu observasi nyata dari model, lalu verifikasi waktu, status stale, daftar admin, homepage, dan perangkat.
+4. Hubungkan perangkat RMX2001 kembali melalui ADB untuk pemeriksaan UI/API terbaru; jangan memakai data sintetis sebagai bukti deteksi live.

@@ -95,6 +95,7 @@ class MobileFamilyRiskApiTest extends TestCase
         $code = $this->withToken($ownerToken)
             ->postJson("/api/family-groups/{$groupId}/members/{$memberId}/invitation")
             ->assertCreated()->json('data.code');
+        Auth::forgetGuards();
         $this->withToken($memberToken)->postJson('/api/family-invitations/accept', [
             'code' => $code,
         ])->assertOk()->assertJsonPath('data.group.name', 'Keluarga Aman')
@@ -149,6 +150,7 @@ class MobileFamilyRiskApiTest extends TestCase
             ->postJson("/api/family-groups/{$groupId}/members", ['name' => 'Anggota'])
             ->assertCreated()->json('data.id');
 
+        Auth::forgetGuards();
         $this->withToken($outsiderToken)
             ->patchJson("/api/family-members/{$memberId}/reminders", [
                 'enabled' => true,

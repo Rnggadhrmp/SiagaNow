@@ -12,6 +12,8 @@ class HazardZone extends Model
         'severity',
         'area_geojson',
         'source',
+        'source_url',
+        'verified_by',
         'verified_at',
     ];
 

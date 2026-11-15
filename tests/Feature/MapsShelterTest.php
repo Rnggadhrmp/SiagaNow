@@ -26,17 +26,27 @@ class MapsShelterTest extends TestCase
             'name' => 'Koordinat Tidak Valid',
             'latitude' => 95,
             'longitude' => 100,
+            'verified_at' => now(),
+        ]);
+        Shelter::create([
+            'name' => 'Shelter Belum Diverifikasi',
+            'address' => 'Padang',
+            'latitude' => -0.948,
+            'longitude' => 100.418,
+            'source' => 'Sumber belum dikonfirmasi',
         ]);
 
         $this->get('/maps')
             ->assertOk()
             ->assertSee('Shelter Terverifikasi')
-            ->assertDontSee('Koordinat Tidak Valid');
+            ->assertDontSee('Koordinat Tidak Valid')
+            ->assertDontSee('Shelter Belum Diverifikasi');
 
         $this->getJson('/api/shelters?q=Padang')
             ->assertOk()
             ->assertJsonPath('data_type', 'database')
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.name', 'Shelter Terverifikasi');
+            ->assertJsonPath('data.0.name', 'Shelter Terverifikasi')
+            ->assertJsonMissing(['name' => 'Shelter Belum Diverifikasi']);
     }
 }

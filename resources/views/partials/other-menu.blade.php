@@ -77,16 +77,16 @@
                 <span class="sn-other-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span>
                 <span><span class="sn-other-title">Panduan Kesiapsiagaan</span><span class="sn-other-desc">Langkah persiapan sebelum, saat, dan setelah bencana.</span><span class="sn-other-tag">Lihat Panduan</span></span>
             </a>
-            <div class="sn-other-item is-planned" aria-disabled="true">
+            <a href="{{ route('berita-kebencanaan') }}" class="sn-other-item {{ request()->routeIs('berita-kebencanaan') || request()->routeIs('news.show') ? 'is-current' : '' }}" @if(request()->routeIs('berita-kebencanaan') || request()->routeIs('news.show')) aria-current="page" @endif>
                 <span class="sn-other-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v14H3z"/><path d="m3 7 9 6 9-6"/></svg></span>
-                <span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Informasi dan kabar kebencanaan setelah sumber berita ditentukan.</span><span class="sn-other-tag">Menunggu sumber data</span></span>
-            </div>
+                <span><span class="sn-other-title">Berita Kebencanaan</span><span class="sn-other-desc">Baca artikel kebencanaan yang telah dipublikasikan SiagaNow.</span><span class="sn-other-tag">Buka berita</span></span>
+            </a>
             <a class="sn-other-item" href="{{ url('/report') }}">
                 <span class="sn-other-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4"/><path d="M5 4c5-3 9 3 14 0v11c-5 3-9-3-14 0"/></svg></span>
                 <span><span class="sn-other-title">Laporkan Kejadian</span><span class="sn-other-desc">Buka halaman Report untuk mengisi formulir pelaporan.</span></span>
             </a>
         </div>
-        <div class="sn-other-footer">Sebagian menu berlabel “Menunggu data” karena sumber datanya belum tersedia. Pilih menu yang aktif untuk membuka halaman terkait.</div>
+        <div class="sn-other-footer">Berita kebencanaan tersedia di halaman berita. Menu yang masih menunggu data belum dapat dibuka.</div>
     </div>
 </div>
 
