@@ -47,12 +47,19 @@ class BmkgForecastService
                     'current' => [
                         'temperature' => $demo['temperature'],
                         'condition' => $demo['condition'],
-                        'humidity' => null,
-                        'rain_mm' => null,
+                        'humidity' => $demo['humidity'] ?? null,
+                        'rain_mm' => $demo['rain_mm'] ?? null,
                         'wind_kmh' => null,
                         'local_datetime' => null,
                     ],
-                    'forecasts' => [],
+                    'forecasts' => collect(config('siaganow.demo_forecasts', []))
+                        ->values()
+                        ->map(fn (array $period, int $index) => array_merge($period, [
+                            'local_datetime' => now('Asia/Jakarta')
+                                ->addHours(($index + 1) * 3)
+                                ->toIso8601String(),
+                        ]))
+                        ->all(),
                 ];
             }
 

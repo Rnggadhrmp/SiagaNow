@@ -18,12 +18,15 @@ class MapsController extends \App\Http\Controllers\Controller
 
         try {
             $shelters = Shelter::query()
+                ->whereNotNull('verified_at')
                 ->whereNotNull('latitude')
                 ->whereNotNull('longitude')
                 ->whereBetween('latitude', [-90, 90])
                 ->whereBetween('longitude', [-180, 180])
                 ->get();
-            $hazardZones = HazardZone::query()->get();
+            $hazardZones = HazardZone::query()
+                ->whereNotNull('verified_at')
+                ->get();
             $disasterEvents = DisasterEvent::query()
                 ->whereNotNull('latitude')
                 ->whereNotNull('longitude')
@@ -62,6 +65,7 @@ class MapsController extends \App\Http\Controllers\Controller
 
         try {
             $shelters = Shelter::query()
+                ->whereNotNull('verified_at')
                 ->whereNotNull('latitude')
                 ->whereNotNull('longitude')
                 ->whereBetween('latitude', [-90, 90])

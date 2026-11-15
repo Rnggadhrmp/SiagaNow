@@ -1,0 +1,4 @@
+@extends('admin.layout') @section('title','Peringatan') @section('top-title','Informasi bencana')
+@section('content')<div class="page-heading"><div><h2>Peringatan bencana</h2><p>Peringatan manual tersimpan terpisah dari feed BMKG. Hanya sumber yang terverifikasi dapat diaktifkan.</p></div><a class="btn" href="{{ route('admin.alerts.create') }}">Tambah draf</a></div>
+@include('admin.partials.simple-index',['indexRoute'=>'admin.alerts.index','items'=>$alerts,'columns'=>['Judul','Jenis','Risiko','Area','Status','Sumber'],'keys'=>['title','hazard_type','risk_level','affected_area','status','source_name'],'editRoute'=>'admin.alerts.edit','emptyTitle'=>'Belum ada peringatan terkelola','emptyText'=>'Feed BMKG tetap dibaca terpisah pada halaman Cuaca BMKG.','cell'=>function($item,$key){$value=$item->{$key} ?? '—';return $key==='status'?'<span class="status">'.e($value).'</span>':e(IlluminateSupportStr::limit((string)$value,55));}])
+@endsection

@@ -7,6 +7,9 @@ use App\Http\Controllers\Api\PublicInfoController;
 use App\Http\Controllers\DisasterReportController;
 use App\Http\Controllers\MapsController;
 use App\Http\Controllers\WeatherWarningController;
+use App\Http\Controllers\Api\ManagedSafetyInfoController;
+use App\Http\Controllers\Api\FloodDetectionController;
+use App\Http\Middleware\VerifyFloodAiToken;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register'])
@@ -19,11 +22,18 @@ Route::post('/login', [AuthController::class, 'login'])
 Route::get('/home', [PublicInfoController::class, 'home'])->name('api.home');
 Route::get('/weather-forecast', [PublicInfoController::class, 'weather'])->name('api.weather-forecast');
 Route::get('/news', [PublicInfoController::class, 'news'])->name('api.news');
+Route::get('/donation-campaigns', [PublicInfoController::class, 'donationCampaigns'])->name('api.donation-campaigns');
 Route::get('/shelters', [MapsController::class, 'search'])->name('api.shelters.search');
 Route::get('/weather-warning', [WeatherWarningController::class, 'check'])
     ->name('api.weather-warning.check');
+Route::get('/managed-alerts', [ManagedSafetyInfoController::class, 'alerts'])->name('api.managed-alerts');
+Route::get('/affected-roads', [ManagedSafetyInfoController::class, 'roads'])->name('api.affected-roads');
+Route::get('/flood-detections', [FloodDetectionController::class, 'index'])->name('api.flood-detections');
+Route::post('/ai/detections', [FloodDetectionController::class, 'store'])
+    ->middleware([VerifyFloodAiToken::class, 'throttle:60,1'])
+    ->name('api.ai.detections.store');
 
-Route::middleware(['auth:sanctum', 'abilities:mobile'])->group(function () {
+Route::middleware(['auth:sanctum', 'abilities:mobile', 'active.account'])->group(function () {
     Route::get('/user', [AuthController::class, 'me'])->name('api.user');
     Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
     Route::get('/reports', [DisasterReportController::class, 'apiIndex'])

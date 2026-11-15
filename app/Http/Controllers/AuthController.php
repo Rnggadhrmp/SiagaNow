@@ -66,6 +66,12 @@ class AuthController extends Controller
         $remember = $request->boolean('remember');
 
         if (Auth::attempt($credentials, $remember)) {
+            if ((Auth::user()->account_status ?? 'active') !== 'active') {
+                Auth::logout();
+
+                return back()->withErrors(['email' => 'Akun ini sedang dinonaktifkan.']);
+            }
+
             $request->session()->regenerate();
 
             return redirect()->intended('/');

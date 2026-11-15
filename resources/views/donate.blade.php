@@ -122,7 +122,14 @@
 
 <main class="mx-auto max-w-[1600px] px-4 py-5 sm:px-6 sm:py-7">
 
-    @if (!empty($selectedCampaign))
+    @if (!empty($selectedCampaign) && $selectedCampaign instanceof \App\Models\DonationCampaign)
+        <a href="{{ route('donate') }}" class="mb-4 inline-flex min-h-11 items-center gap-2 text-base font-bold text-emerald-900 underline underline-offset-4">← Kembali ke daftar program</a>
+        <section class="panel p-5 sm:p-8">
+            <p class="text-sm font-bold uppercase tracking-wide text-emerald-800">Program terverifikasi</p>
+            <h1 class="mt-2 text-3xl font-black leading-tight text-emerald-950 sm:text-4xl">{{ $selectedCampaign->title }}</h1>
+            <div class="campaign-detail-grid mt-6"><div><div class="campaign-detail-image" aria-label="Ilustrasi kesiapsiagaan"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 48h48M14 48V28l18-14 18 14v20M25 48V34h14v14"/><path d="M8 22h13"/></svg></div><p class="mt-5 text-base leading-7 muted">{{ $selectedCampaign->description }}</p><dl class="campaign-facts"><div class="campaign-fact"><dt>Pengelola</dt><dd>{{ $selectedCampaign->organizer }}</dd></div><div class="campaign-fact"><dt>Target program</dt><dd>Rp{{ number_format($selectedCampaign->target_amount,0,',','.') }}</dd></div><div class="campaign-fact"><dt>Periode</dt><dd>{{ $selectedCampaign->starts_at?->locale('id')->translatedFormat('j M Y')??'Belum ditetapkan' }} – {{ $selectedCampaign->ends_at?->locale('id')->translatedFormat('j M Y')??'Belum ditetapkan' }}</dd></div><div class="campaign-fact"><dt>Status</dt><dd>{{ $selectedCampaign->status==='open'?'Terbuka':'Ditutup' }}</dd></div></dl></div><aside class="campaign-detail-aside"><p class="text-base font-bold text-emerald-950">Informasi penggalangan</p><p class="mt-3 text-base leading-7 muted">Program tercatat dan sumbernya diverifikasi. SiagaNow belum menyediakan payment gateway atau pencatatan transaksi.</p>@if($selectedCampaign->source_url)<p class="mt-4"><a class="btn campaign-secondary" href="{{ $selectedCampaign->source_url }}" target="_blank" rel="noopener noreferrer">Periksa sumber program ↗</a></p>@endif</aside></div>
+        </section>
+    @elseif (!empty($selectedCampaign))
         @php($campaign = $selectedCampaign)
         @php($progress = min(100, (int) floor(($campaign['collected'] / max(1, $campaign['target'])) * 100)))
         <a href="{{ route('donate') }}" class="mb-4 inline-flex min-h-11 items-center gap-2 text-base font-bold text-emerald-900 underline underline-offset-4">← Kembali ke daftar program</a>
@@ -176,6 +183,9 @@
             <div class="mb-4 flex flex-wrap items-center justify-between gap-3"><div><h2 class="text-2xl font-black text-emerald-900">Program Donasi Terbaru</h2><p class="mt-1 text-base muted">{{ $demoMode ? 'Rencana kesiapsiagaan yang disusun sebagai ilustrasi.' : 'Daftar program terverifikasi belum tersedia.' }}</p></div><span class="rounded-sm bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-900">{{ $demoMode ? count($demoCampaigns) . ' program contoh' : '0 program' }}</span></div>
 
             <div id="campaign-list" class="space-y-4">
+                @foreach(($verifiedCampaigns ?? collect()) as $verified)
+                    <article class="campaign-card"><div class="campaign-image" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 48h48M14 48V28l18-14 18 14v20M25 48V34h14v14"/></svg></div><div><div class="campaign-meta"><span>{{ $verified->starts_at?->locale('id')->translatedFormat('j M Y')??'Periode belum ditetapkan' }}</span><span>{{ $verified->organizer }}</span></div><h3 class="campaign-title mt-2">{{ $verified->title }}</h3><p class="mt-2 text-base leading-6 muted">{{ $verified->description }}</p><div class="campaign-actions"><a class="btn campaign-secondary" href="{{ route('donate.program.show',['campaign'=>$verified->slug]) }}">Lihat informasi program</a></div></div></article>
+                @endforeach
                 @if ($demoMode)
                     @foreach ($demoCampaigns as $campaign)
                         @php($progress = min(100, (int) floor(($campaign['collected'] / max(1, $campaign['target'])) * 100)))

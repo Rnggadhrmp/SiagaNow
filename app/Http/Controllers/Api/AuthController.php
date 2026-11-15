@@ -55,6 +55,10 @@ class AuthController extends Controller
             ], 422);
         }
 
+        if (($user->account_status ?? 'active') !== 'active') {
+            return response()->json(['message' => 'Akun ini sedang dinonaktifkan.'], 403);
+        }
+
         $token = $user->createToken(
             'SiagaNow Mobile',
             ['mobile'],

@@ -75,8 +75,9 @@ class BmkgForecastTest extends TestCase
             ->assertJsonPath('data_type', 'simulation')
             ->assertJsonPath('status', 'fallback')
             ->assertJsonPath('source', 'Contoh Data SiagaNow')
-            ->assertJsonPath('current.humidity', null)
-            ->assertJsonPath('forecasts', []);
+            ->assertJsonPath('current.humidity', 78)
+            ->assertJsonPath('forecasts.0.condition', 'Hujan ringan')
+            ->assertJsonCount(3, 'forecasts');
     }
 
     public function test_failed_bmkg_request_is_unavailable_when_demo_mode_is_disabled(): void
