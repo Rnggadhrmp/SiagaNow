@@ -178,7 +178,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
             Route::get('/reports/{report}', [AdminReportController::class, 'show'])->name('reports.show');
             Route::patch('/reports/{report}/status', [AdminReportController::class, 'updateStatus'])->name('reports.status');
+            Route::get('/reports/{report}/evidence/{index}/preview', [AdminReportController::class, 'evidencePreview'])->name('reports.evidence-preview');
             Route::get('/reports/{report}/evidence/{index}', [AdminReportController::class, 'evidence'])->name('reports.evidence');
+            Route::patch('/reports/{report}/ai-verification', [AdminReportController::class, 'updateAiVerification'])->name('reports.ai-verification');
         });
 
         Route::middleware('admin.permission:news.manage')->group(function () {

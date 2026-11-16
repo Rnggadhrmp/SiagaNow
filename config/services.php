@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'yolo_reports' => ['enabled' => env('YOLO_REPORT_ENABLED', false), 'url' => env('YOLO_REPORT_URL'), 'token' => env('YOLO_REPORT_TOKEN')],
 
     /*
     |--------------------------------------------------------------------------

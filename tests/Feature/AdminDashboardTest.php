@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\AdminRole;
+use App\Models\DisasterReport;
 use App\Models\NewsArticle;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -42,6 +43,19 @@ class AdminDashboardTest extends TestCase
 
         $this->actingAs($user)->get(route('admin.reports.index'))->assertForbidden();
         $this->actingAs($user)->get(route('admin.news.index'))->assertOk();
+    }
+
+    public function test_admin_ai_verification_is_audited_and_does_not_change_report_status(): void
+    {
+        $user = User::factory()->create(['account_status' => 'active']);
+        $user->adminRoles()->attach(AdminRole::query()->where('slug', 'super-admin')->value('id'));
+        $report = DisasterReport::create(['user_id' => $user->id, 'title' => 'Laporan uji verifikasi', 'latitude' => -0.95, 'longitude' => 100.42, 'occurred_at' => now(), 'event_type' => 'Banjir', 'injured' => 0, 'deceased' => 0, 'damage_level' => 'Rendah', 'description' => 'Laporan untuk menguji verifikasi AI.', 'status' => 'submitted']);
+        $report->aiAnalysis()->create(['status' => 'completed', 'detections' => [], 'verification_status' => 'pending']);
+
+        $this->actingAs($user)->patch(route('admin.reports.ai-verification', $report), ['verification_status' => 'verified', 'verification_notes' => 'Sudah diperiksa petugas.'])->assertRedirect();
+        $this->assertDatabaseHas('report_ai_analyses', ['disaster_report_id' => $report->id, 'verification_status' => 'verified', 'verified_by' => $user->id]);
+        $this->assertDatabaseHas('disaster_reports', ['id' => $report->id, 'status' => 'submitted']);
+        $this->assertDatabaseHas('admin_audit_logs', ['action' => 'report.ai_verification_changed', 'subject_id' => $report->id]);
     }
 
     public function test_admin_module_pages_render_with_empty_database_state(): void

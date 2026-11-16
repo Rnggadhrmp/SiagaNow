@@ -6,9 +6,9 @@ use App\Models\DisasterReport;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -128,6 +128,20 @@ class MobileApiTest extends TestCase
             'injured' => 0,
             'deceased' => 0,
         ]);
+    }
+
+    public function test_new_mobile_report_gets_pending_ai_analysis_without_configured_model(): void
+    {
+        config(['services.yolo_reports.enabled' => false, 'services.yolo_reports.url' => null, 'services.yolo_reports.token' => null]);
+        $owner = User::factory()->create();
+        $token = $owner->createToken('mobile', ['mobile'])->plainTextToken;
+        $payload = ['title' => 'Laporan menunggu analisis', 'latitude' => -0.95, 'longitude' => 100.42, 'event_date' => now()->toDateString(), 'event_time' => '09:30', 'event_type' => 'Banjir', 'damage_level' => 'Rendah', 'description' => 'Bukti menunggu service yang dikonfigurasi.'];
+        $this->withToken($token)->postJson('/api/reports', $payload)->assertCreated()
+            ->assertJsonPath('data.ai_analysis.status', 'pending')
+            ->assertJsonPath('data.ai_analysis.service_status', 'not_configured');
+        $this->withToken($token)->getJson('/api/reports')->assertOk()
+            ->assertJsonPath('data.0.ai_analysis.status', 'pending');
+        $this->assertDatabaseHas('report_ai_analyses', ['verification_status' => 'pending']);
     }
 
     public function test_mobile_report_attachment_is_validated_and_stored_on_private_disk(): void
